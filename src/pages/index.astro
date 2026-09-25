@@ -1,307 +1,356 @@
 ---
 // src/pages/index.astro
-const title = "UPI MDR Calculator (2026) | Merchant Discount Rate & Surcharge Split";
-const description = "Free online UPI MDR Calculator. Instantly calculate Merchant Discount Rate (MDR) charges, 18% GST deductions, and net seller payout for Standard UPI, RuPay Credit Cards, and Wallets.";
-const canonicalURL = "https://yourdomain.com/"; // Replace with your domain once live
+const siteURL = "https://upimdrcalculator.com/";
+const title = "UPI MDR Calculator 2026 – MDR Charges, GST & Net Settlement";
+const description = "Free UPI MDR calculator for the new rules from 15 October 2026. Enter a UPI payment amount to see the 0.4% MDR, 18% GST on MDR, and how much the merchant actually receives.";
+const lastUpdated = "26 September 2026";
+
+// Same rules as the client-side calculator below (kept in sync)
+const MDR_RATE = 0.004;
+const MDR_CAP = 300;
+const THRESHOLD = 2000;
+const GST_RATE = 0.18;
+
+function calc(amount: number) {
+  const mdr = amount > THRESHOLD ? Math.min(amount * MDR_RATE, MDR_CAP) : 0;
+  const gst = mdr * GST_RATE;
+  return { amount, mdr, gst, total: mdr + gst, net: amount - mdr - gst };
+}
+
+const inr = (v: number) =>
+  "₹" + v.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const inr0 = (v: number) => "₹" + v.toLocaleString("en-IN");
+
+const examples = [1500, 2000, 3000, 5000, 10000, 25000, 50000, 75000, 100000].map(calc);
+
+const faqs = [
+  {
+    q: "When do the new UPI MDR charges start?",
+    a: "The new MDR framework applies from 15 October 2026. It was announced by NPCI on 15 September 2026.",
+  },
+  {
+    q: "Is UPI still free for customers?",
+    a: "Yes. MDR is a merchant-side fee. Customers paying by UPI are not charged anything extra, and person-to-person (P2P) transfers remain free.",
+  },
+  {
+    q: "Which UPI payments attract MDR?",
+    a: "Person-to-merchant (P2M) UPI payments above ₹2,000 attract 0.4% MDR. Payments of ₹2,000 or less have zero MDR.",
+  },
+  {
+    q: "What is the maximum UPI MDR on one payment?",
+    a: "MDR is capped at ₹300 per transaction, which is reached at ₹75,000. With 18% GST on the MDR, the maximum total deduction is ₹354.",
+  },
+  {
+    q: "Are small merchants exempt from UPI MDR?",
+    a: "Yes. Small merchants receiving up to ₹1 lakh a month through UPI QR codes continue to pay zero MDR, even on payments above ₹2,000.",
+  },
+  {
+    q: "Which sectors pay a flat ₹5 MDR?",
+    a: "Reported essential sectors — railways, telecom, insurance, fuel and agricultural inputs — pay a flat ₹5 MDR on payments above ₹2,000 instead of 0.4%.",
+  },
+  {
+    q: "Is GST charged on UPI MDR?",
+    a: "Yes, 18% GST applies to the MDR fee, not to the payment amount. On a ₹5,000 payment, MDR is ₹20 and GST is ₹3.60. GST-registered merchants can usually claim this as input tax credit. The GST rate on MDR may be reviewed by the GST Council.",
+  },
+  {
+    q: "Can a merchant charge customers extra to cover MDR?",
+    a: "No. Banks and payment providers have been directed to ensure merchants do not pass MDR on to customers. The MDR is deducted from the merchant's settlement.",
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+
+const appSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "UPI MDR Calculator",
+  url: siteURL,
+  applicationCategory: "FinanceApplication",
+  operatingSystem: "All",
+  inLanguage: "en-IN",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "INR" },
+};
 ---
 
-<html lang="en">
+<html lang="en-IN">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonicalURL} />
+    <link rel="canonical" href={siteURL} />
 
-    <!-- Open Graph / Social Media Sharing -->
+    <!-- Open Graph / Social sharing -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:url" content={siteURL} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content="https://yourdomain.com/og-image.png" />
+    <meta property="og:locale" content="en_IN" />
 
-    <!-- Twitter Cards -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content={canonicalURL} />
-    <meta property="twitter:title" content={title} />
-    <meta property="twitter:description" content={description} />
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
 
-    <!-- JSON-LD Structured Data 1: WebApplication Schema -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "name": "UPI MDR Calculator",
-        "applicationCategory": "FinanceApplication",
-        "operatingSystem": "All",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "INR"
-        }
-      }
-    </script>
+    <script type="application/ld+json" set:html={JSON.stringify(appSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
-    <!-- JSON-LD Structured Data 2: FAQPage Schema for Google Rich Snippets -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "How does the UPI MDR Calculator determine charges?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "The UPI MDR Calculator checks your payment method and transaction amount against NPCI regulations. Standard UPI payments under ₹2,000 carry 0% MDR, while transactions above ₹2,000 apply the respective rate (0.40% for bank UPI, 1.50% for RuPay CC, or 1.10% for Wallets) plus 18% GST."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Is there any MDR fee for standard UPI transactions under ₹2,000?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "No. Standard bank-to-bank UPI transfers up to ₹2,000 are completely exempt from MDR processing charges."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "What is the MDR rate for RuPay Credit Cards on UPI?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "RuPay Credit Card transactions on UPI carry a standard 1.50% MDR charge plus an additional 18% GST on the MDR fee for transactions over ₹2,000."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "What is the maximum fee cap on Standard Bank UPI?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "For Standard Bank UPI transactions above ₹2,000, the base MDR fee is capped at ₹300. With 18% GST (₹54) included, the maximum total surcharge is capped at ₹354."
-            }
-          }
-        ]
-      }
-    </script>
-
-       <script is:inline defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "92039e47441d48f689cc60fd3525436f"}'></script>
+    <script is:inline defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "92039e47441d48f689cc60fd3525436f"}'></script>
   </head>
   <body>
     <main class="container">
       <header class="header">
         <h1>UPI MDR Calculator</h1>
-        <p>Calculate Merchant Discount Rate (MDR) charges, 18% GST deductions, and net seller settlements instantly.</p>
+        <p>See the MDR, GST and net amount a merchant receives on any UPI payment under the new rules from <strong>15 October 2026</strong>.</p>
       </header>
 
-      <!-- CALCULATOR BOX -->
-      <section class="calc-card">
+      <!-- CALCULATOR -->
+      <section class="calc-card" aria-label="UPI MDR calculator">
         <div class="input-group">
-          <label for="amount">Transaction Amount (₹)</label>
-          <input 
-            type="number" 
-            id="amount" 
-            placeholder="e.g. 5064.90" 
-            value="5000" 
-            step="any" 
-            min="0" 
-            inputmode="decimal"
-          />
+          <label for="amount">UPI payment amount (₹)</label>
+          <input type="number" id="amount" value="5000" step="any" min="0" inputmode="decimal" />
         </div>
 
         <div class="input-group">
-          <label for="paymentType">Payment Method</label>
-          <select id="paymentType">
-            <option value="bank_upi" selected>Standard Bank UPI (0.40% above ₹2k)</option>
-            <option value="rupay_cc">RuPay Credit Card on UPI (1.50%)</option>
-            <option value="wallet_ppi">Prepaid Wallet / PPI (1.10%)</option>
-            <option value="utilities">Utilities / Fuel / Telecom (Flat ₹5)</option>
+          <label for="category">Merchant type</label>
+          <select id="category">
+            <option value="standard" selected>Standard merchant (0.4%, max ₹300)</option>
+            <option value="essential">Essential sector – railways, telecom, insurance, fuel, agri inputs (flat ₹5)</option>
+            <option value="custom">Custom MDR rate</option>
           </select>
         </div>
 
+        <div class="input-group" id="customRateGroup" hidden>
+          <label for="customRate">Custom MDR rate (%)</label>
+          <input type="number" id="customRate" value="0.4" step="0.01" min="0" inputmode="decimal" />
+          <small class="hint">Use this if your bank or payment provider quotes a different rate.</small>
+        </div>
+
+        <label class="check">
+          <input type="checkbox" id="smallMerchant" />
+          <span>My UPI QR receipts are under ₹1 lakh a month <em>(small merchants are exempt)</em></span>
+        </label>
+
+        <label class="check">
+          <input type="checkbox" id="includeGst" checked />
+          <span>Include 18% GST on MDR</span>
+        </label>
+
         <hr class="divider" />
 
-        <!-- RESULTS TABLE -->
-        <div class="results">
-          <div class="result-row highlight-net">
-            <span>Seller Receives / Base Bill:</span>
-            <strong id="baseAmount">₹4,980.09</strong>
+        <div class="results" aria-live="polite">
+          <div class="result-row">
+            <span>Customer pays</span>
+            <span id="paid">₹5,000.00</span>
           </div>
           <div class="result-row">
-            <span>Base MDR Charge:</span>
-            <span id="mdrFee">₹19.92</span>
+            <span>MDR</span>
+            <span id="mdrFee">– ₹20.00</span>
           </div>
-          <div class="result-row">
-            <span>18% GST on MDR:</span>
-            <span id="gstFee">₹3.59</span>
+          <div class="result-row" id="gstRow">
+            <span>GST on MDR (18%)</span>
+            <span id="gstFee">– ₹3.60</span>
           </div>
           <div class="result-row highlight-fee">
-            <span>Total Deducted Surcharge:</span>
-            <strong id="totalFee">₹23.51</strong>
+            <span>Total deduction</span>
+            <strong id="totalFee">₹23.60</strong>
           </div>
+          <div class="result-row highlight-net">
+            <span>Merchant receives</span>
+            <strong id="netAmount">₹4,976.40</strong>
+          </div>
+          <p class="note" id="note">0.4% MDR applies because the payment is above ₹2,000. Effective cost: 0.47%.</p>
         </div>
       </section>
 
-      <!-- SEO CONTENT SECTION -->
+      <p class="updated">Last updated {lastUpdated}. Based on the NPCI MDR framework announced on 15 September 2026. Check your exact charges with your bank or payment provider.</p>
+
+      <!-- CONTENT -->
       <article class="seo-content">
-        <h2>About This Free Online UPI MDR Calculator</h2>
+        <h2>How UPI MDR works from 15 October 2026</h2>
         <p>
-          This <strong>UPI MDR Calculator</strong> helps Indian merchants, business owners, and consumers quickly calculate processing fees and net settlements. Merchant Discount Rate (MDR) is the commercial fee charged by acquiring banks for handling digital payments. While peer-to-peer and small merchant transactions under ₹2,000 are zero-rated, specific digital instruments like RuPay Credit Cards on UPI and Prepaid Wallets incur small interchange surcharges on larger transactions.
+          MDR (Merchant Discount Rate) is the fee a merchant pays for accepting a digital payment. UPI had zero MDR for years. From <strong>15 October 2026</strong>, NPCI's new framework adds a small MDR on larger person-to-merchant (P2M) UPI payments. The customer still pays the normal price; the fee is deducted from what the merchant receives.
         </p>
 
-        <h3>Official NPCI UPI MDR Rates</h3>
+        <h3>The rules at a glance</h3>
         <ul>
-          <li><strong>Standard Bank UPI:</strong> 0.40% processing fee for transactions above ₹2,000 (Capped at ₹300 max MDR + 18% GST).</li>
-          <li><strong>RuPay Credit Cards on UPI:</strong> Standard 1.50% processing fee (+ 18% GST on MDR).</li>
-          <li><strong>Prepaid Wallets (PPI):</strong> 1.10% interchange fee for transactions over ₹2,000.</li>
-          <li><strong>Utility / Fuel Payments:</strong> Flat ₹5 processing fee (+ 18% GST = ₹5.90 total surcharge).</li>
+          <li><strong>₹2,000 or less:</strong> zero MDR.</li>
+          <li><strong>Above ₹2,000:</strong> 0.4% MDR, capped at ₹300 per payment (the cap is reached at ₹75,000).</li>
+          <li><strong>Essential sectors</strong> (railways, telecom, insurance, fuel, agricultural inputs): flat ₹5 MDR above ₹2,000.</li>
+          <li><strong>Small merchants</strong> receiving up to ₹1 lakh a month via UPI QR: zero MDR.</li>
+          <li><strong>Person-to-person transfers:</strong> always free.</li>
+          <li><strong>GST:</strong> 18% on the MDR fee only, not on the payment amount.</li>
         </ul>
 
-        <h2>Frequently Asked Questions</h2>
+        <h3>How the calculation works</h3>
+        <p>
+          MDR = payment × 0.4% (maximum ₹300). GST = MDR × 18%. Merchant receives = payment − MDR − GST.
+          For a ₹10,000 payment: MDR is ₹40, GST is ₹7.20, and the merchant receives ₹9,952.80.
+        </p>
+
+        <h3>UPI MDR examples for a standard merchant</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Payment</th><th>MDR</th><th>GST (18%)</th><th>Merchant receives</th></tr>
+            </thead>
+            <tbody>
+              {examples.map((e) => (
+                <tr>
+                  <td>{inr0(e.amount)}</td>
+                  <td>{inr(e.mdr)}</td>
+                  <td>{inr(e.gst)}</td>
+                  <td>{inr(e.net)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Frequently asked questions</h2>
         <div class="faq-accordion">
-          <details>
-            <summary>How does the UPI MDR Calculator determine charges?</summary>
-            <p>The UPI MDR Calculator checks your payment method and transaction amount against NPCI regulations. Standard UPI payments under ₹2,000 carry 0% MDR, while transactions above ₹2,000 apply the respective rate (0.40% for bank UPI, 1.50% for RuPay CC, or 1.10% for Wallets) plus 18% GST.</p>
-          </details>
-
-          <details>
-            <summary>Is there any MDR fee for standard UPI transactions under ₹2,000?</summary>
-            <p>No. Standard bank-to-bank UPI transfers up to ₹2,000 are completely exempt from MDR processing charges.</p>
-          </details>
-
-          <details>
-            <summary>What is the MDR rate for RuPay Credit Cards on UPI?</summary>
-            <p>RuPay Credit Card transactions on UPI carry a standard 1.50% MDR charge plus an additional 18% GST on the MDR fee for transactions over ₹2,000.</p>
-          </details>
-
-          <details>
-            <summary>What is the maximum fee cap on Standard Bank UPI?</summary>
-            <p>For Standard Bank UPI transactions above ₹2,000, the base MDR fee is capped at ₹300. With 18% GST (₹54) included, the maximum total surcharge is capped at ₹354.</p>
-          </details>
+          {faqs.map((f) => (
+            <details>
+              <summary>{f.q}</summary>
+              <p>{f.a}</p>
+            </details>
+          ))}
         </div>
       </article>
+
+      <footer class="footer">
+        <p>This calculator is for information only and is not financial or tax advice. Actual charges depend on your bank, payment provider and merchant category.</p>
+      </footer>
     </main>
 
-    <!-- CLIENT-SIDE INTERACTIVE SCRIPT -->
     <script>
-      const amountInput = document.getElementById('amount') as HTMLInputElement;
-      const paymentSelect = document.getElementById('paymentType') as HTMLSelectElement;
+      const MDR_RATE = 0.004;
+      const MDR_CAP = 300;
+      const THRESHOLD = 2000;
+      const GST_RATE = 0.18;
+      const ESSENTIAL_FLAT = 5;
 
-      const baseAmountEl = document.getElementById('baseAmount')!;
-      const mdrFeeEl = document.getElementById('mdrFee')!;
-      const gstFeeEl = document.getElementById('gstFee')!;
-      const totalFeeEl = document.getElementById('totalFee')!;
+      const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+      const amountInput = $<HTMLInputElement>("amount");
+      const categorySelect = $<HTMLSelectElement>("category");
+      const customRateGroup = $<HTMLDivElement>("customRateGroup");
+      const customRateInput = $<HTMLInputElement>("customRate");
+      const smallMerchantBox = $<HTMLInputElement>("smallMerchant");
+      const includeGstBox = $<HTMLInputElement>("includeGst");
 
-      // Restore previous selection if present in localStorage, otherwise default to Standard UPI
-      const savedMethod = localStorage.getItem('selectedPaymentMethod');
-      if (savedMethod) {
-        paymentSelect.value = savedMethod;
-      } else {
-        paymentSelect.value = 'bank_upi';
-      }
+      const formatINR = (v: number) =>
+        "₹" + v.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-      function calculateFees() {
-        const rawVal = parseFloat(amountInput.value);
-        // Prevent NaN, Infinite, or Negative numbers
-        const inputVal = (isNaN(rawVal) || !isFinite(rawVal)) ? 0 : Math.max(0, rawVal);
-        const method = paymentSelect.value;
+      const num = (el: HTMLInputElement) => {
+        const v = parseFloat(el.value);
+        return isFinite(v) ? Math.max(0, v) : 0;
+      };
 
-        let baseAmount = inputVal;
-        let mdrFee = 0;
-        let gstFee = 0;
-        let totalFee = 0;
+      function calculate() {
+        const amount = num(amountInput);
+        const category = categorySelect.value;
+        customRateGroup.hidden = category !== "custom";
 
-        // NPCI Rule: Transactions <= ₹2,000 have 0% MDR
-        if (inputVal > 2000) {
-          if (method === 'utilities') {
-            // Flat ₹5 Fee + 18% GST = ₹5.90 total surcharge
-            mdrFee = 5.00;
-            gstFee = mdrFee * 0.18; // ₹0.90
-            totalFee = mdrFee + gstFee; // ₹5.90
-            baseAmount = Math.max(0, inputVal - totalFee);
-          } else {
-            let mdrRate = 0;
-            if (method === 'bank_upi') mdrRate = 0.004;      // 0.40%
-            else if (method === 'rupay_cc') mdrRate = 0.015;  // 1.50%
-            else if (method === 'wallet_ppi') mdrRate = 0.011; // 1.10%
+        let mdr = 0;
+        let reason = "";
 
-            const effectiveRate = mdrRate * 1.18; // Includes 18% GST on MDR
-            baseAmount = inputVal / (1 + effectiveRate);
-            mdrFee = baseAmount * mdrRate;
-
-            // Cap Check for Standard Bank UPI (MDR max cap = ₹300 + 18% GST = ₹354 total)
-            if (method === 'bank_upi' && mdrFee > 300) {
-              mdrFee = 300.00;
-              gstFee = 54.00; // 18% of ₹300
-              totalFee = 354.00;
-              baseAmount = inputVal - totalFee;
-            } else {
-              gstFee = mdrFee * 0.18;
-              totalFee = mdrFee + gstFee;
-            }
-          }
+        if (amount <= THRESHOLD) {
+          reason = "No MDR: payments of ₹2,000 or less are exempt.";
+        } else if (smallMerchantBox.checked) {
+          reason = "No MDR: small merchants with UPI QR receipts under ₹1 lakh a month are exempt.";
+        } else if (category === "essential") {
+          mdr = Math.min(ESSENTIAL_FLAT, amount);
+          reason = "Flat ₹5 MDR applies for essential sectors on payments above ₹2,000.";
+        } else if (category === "custom") {
+          const rate = num(customRateInput) / 100;
+          mdr = Math.min(amount * rate, amount);
+          reason = `Custom rate of ${(rate * 100).toFixed(2)}% applied (no cap).`;
+        } else {
+          const raw = amount * MDR_RATE;
+          mdr = Math.min(raw, MDR_CAP);
+          reason = raw > MDR_CAP
+            ? "MDR is capped at ₹300 (reached at ₹75,000)."
+            : "0.4% MDR applies because the payment is above ₹2,000.";
         }
 
-        // Indian Currency Formatter
-        const formatINR = (val: number) => 
-          `₹${val.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        const gst = includeGstBox.checked ? mdr * GST_RATE : 0;
+        const total = mdr + gst;
+        const net = amount - total;
+        const effective = amount > 0 ? (total / amount) * 100 : 0;
 
-        // DOM Updates
-        baseAmountEl.textContent = formatINR(baseAmount);
-        mdrFeeEl.textContent = formatINR(mdrFee);
-        gstFeeEl.textContent = formatINR(gstFee);
-        totalFeeEl.textContent = formatINR(totalFee);
+        $("paid").textContent = formatINR(amount);
+        $("mdrFee").textContent = (mdr > 0 ? "– " : "") + formatINR(mdr);
+        $("gstFee").textContent = (gst > 0 ? "– " : "") + formatINR(gst);
+        $("gstRow").hidden = !includeGstBox.checked;
+        $("totalFee").textContent = formatINR(total);
+        $("netAmount").textContent = formatINR(net);
+        $("note").textContent = total > 0 ? `${reason} Effective cost: ${effective.toFixed(2)}%.` : reason;
       }
 
-      // Event Listeners
-      amountInput.addEventListener('input', calculateFees);
-      paymentSelect.addEventListener('change', () => {
-        localStorage.setItem('selectedPaymentMethod', paymentSelect.value);
-        calculateFees();
-      });
+      // Remember the merchant type between visits (optional convenience)
+      try {
+        const saved = localStorage.getItem("mdrCategory");
+        if (saved && [...categorySelect.options].some((o) => o.value === saved)) {
+          categorySelect.value = saved;
+        }
+      } catch {}
 
-      // Initial Execution
-      calculateFees();
+      categorySelect.addEventListener("change", () => {
+        try { localStorage.setItem("mdrCategory", categorySelect.value); } catch {}
+        calculate();
+      });
+      [amountInput, customRateInput].forEach((el) => el.addEventListener("input", calculate));
+      [smallMerchantBox, includeGstBox].forEach((el) => el.addEventListener("change", calculate));
+
+      calculate();
     </script>
 
-    <!-- MINIMAL ACCESSIBLE STYLES -->
     <style>
       :root {
         --primary: #2563eb;
         --bg: #f8fafc;
         --card: #ffffff;
         --text: #0f172a;
+        --muted: #64748b;
+        --body: #334155;
         --border: #e2e8f0;
-        --green: #16a34a;
-        --red: #dc2626;
+        --green: #15803d;
+        --red: #b91c1c;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0b1220;
+          --card: #111a2e;
+          --text: #e2e8f0;
+          --muted: #94a3b8;
+          --body: #cbd5e1;
+          --border: #1f2a44;
+          --green: #4ade80;
+          --red: #f87171;
+        }
       }
       body {
         font-family: system-ui, -apple-system, sans-serif;
         background-color: var(--bg);
         color: var(--text);
         margin: 0;
-        padding: 20px;
+        padding: 20px 16px;
         display: flex;
         justify-content: center;
       }
-      .container {
-        max-width: 580px;
-        width: 100%;
-      }
-      .header {
-        text-align: center;
-        margin-bottom: 24px;
-      }
-      .header h1 {
-        font-size: 1.8rem;
-        margin-bottom: 8px;
-        color: var(--text);
-      }
-      .header p {
-        color: #64748b;
-        font-size: 0.95rem;
-        line-height: 1.4;
-      }
+      .container { max-width: 600px; width: 100%; }
+      .header { text-align: center; margin-bottom: 24px; }
+      .header h1 { font-size: 1.8rem; margin-bottom: 8px; }
+      .header p { color: var(--muted); font-size: 0.95rem; line-height: 1.5; }
       .calc-card {
         background: var(--card);
         border: 1px solid var(--border);
@@ -309,61 +358,50 @@ const canonicalURL = "https://yourdomain.com/"; // Replace with your domain once
         padding: 24px;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
       }
-      .input-group {
-        margin-bottom: 16px;
-      }
-      label {
-        display: block;
-        font-weight: 600;
-        font-size: 0.9rem;
-        margin-bottom: 6px;
-      }
-      input, select {
+      .input-group { margin-bottom: 16px; }
+      label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; }
+      input[type="number"], select {
         width: 100%;
         padding: 12px;
         border: 1px solid var(--border);
         border-radius: 8px;
         font-size: 1rem;
         box-sizing: border-box;
+        background: var(--card);
+        color: var(--text);
       }
-      .divider {
-        border: 0;
-        border-top: 1px solid var(--border);
-        margin: 20px 0;
-      }
-      .results {
+      .hint { display: block; color: var(--muted); font-size: 0.8rem; margin-top: 6px; }
+      .check {
         display: flex;
-        flex-direction: column;
-        gap: 12px;
+        gap: 10px;
+        align-items: flex-start;
+        font-weight: 500;
+        margin-bottom: 10px;
+        cursor: pointer;
       }
-      .result-row {
-        display: flex;
-        justify-content: space-between;
-        font-size: 0.95rem;
-      }
+      .check input { width: 18px; height: 18px; margin: 2px 0 0; flex-shrink: 0; accent-color: var(--primary); }
+      .check em { color: var(--muted); font-style: normal; font-weight: 400; }
+      .divider { border: 0; border-top: 1px solid var(--border); margin: 20px 0; }
+      .results { display: flex; flex-direction: column; gap: 12px; }
+      .result-row { display: flex; justify-content: space-between; gap: 12px; font-size: 0.95rem; }
+      .result-row[hidden] { display: none; }
+      .highlight-fee { color: var(--red); }
       .highlight-net {
         color: var(--green);
-        font-size: 1.1rem;
+        font-size: 1.15rem;
+        border-top: 1px dashed var(--border);
+        padding-top: 12px;
       }
-      .highlight-fee {
-        color: var(--red);
-        font-size: 1.05rem;
-      }
-      .seo-content {
-        margin-top: 40px;
-        line-height: 1.6;
-        color: #334155;
-      }
-      .seo-content h2 {
-        font-size: 1.25rem;
-        margin-top: 24px;
-        color: var(--text);
-      }
-      .seo-content h3 {
-        font-size: 1.05rem;
-        margin-top: 18px;
-        color: var(--text);
-      }
+      .note { margin: 4px 0 0; font-size: 0.85rem; color: var(--muted); }
+      .updated { font-size: 0.8rem; color: var(--muted); text-align: center; margin: 14px 0 0; }
+      .seo-content { margin-top: 36px; line-height: 1.6; color: var(--body); }
+      .seo-content h2 { font-size: 1.25rem; margin-top: 28px; color: var(--text); }
+      .seo-content h3 { font-size: 1.05rem; margin-top: 20px; color: var(--text); }
+      .table-wrap { overflow-x: auto; }
+      table { width: 100%; border-collapse: collapse; font-size: 0.9rem; background: var(--card); }
+      th, td { padding: 8px 10px; border: 1px solid var(--border); text-align: right; white-space: nowrap; }
+      th:first-child, td:first-child { text-align: left; }
+      th { color: var(--text); }
       .faq-accordion details {
         background: var(--card);
         border: 1px solid var(--border);
@@ -371,17 +409,9 @@ const canonicalURL = "https://yourdomain.com/"; // Replace with your domain once
         padding: 12px 16px;
         margin-bottom: 10px;
       }
-      .faq-accordion summary {
-        font-weight: 600;
-        cursor: pointer;
-        outline: none;
-      }
-      .faq-accordion p {
-        margin-top: 10px;
-        margin-bottom: 0;
-        font-size: 0.92rem;
-        color: #475569;
-      }
+      .faq-accordion summary { font-weight: 600; cursor: pointer; color: var(--text); }
+      .faq-accordion p { margin: 10px 0 0; font-size: 0.92rem; }
+      .footer { margin-top: 32px; font-size: 0.8rem; color: var(--muted); text-align: center; }
     </style>
   </body>
 </html>
