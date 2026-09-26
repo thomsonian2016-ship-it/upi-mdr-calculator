@@ -1,0 +1,175 @@
+---
+import Base from "../layouts/Base.astro";
+import { SITE, LAST_UPDATED, LAST_UPDATED_ISO, OFFICIAL_FAQ_URL, faqSchema, breadcrumbSchema, type Faq } from "../lib/mdr";
+
+const title = "UPI vs Debit Card vs Credit Card Charges Calculator (MDR 2026)";
+const description = "Compare what a merchant pays to accept UPI, RuPay debit, Visa/Mastercard debit and credit cards. Uses RBI debit card MDR caps and the new UPI rules.";
+const path = "/upi-vs-card-charges/";
+
+const RBI_URL = "https://www.rbi.org.in/commonperson/English/Scripts/Notification.aspx?Id=2620";
+const S10A_URL = "https://upstox.com/news/business-news/latest-updates/govt-bars-charges-on-ru-pay-debit-cards-upi-transactions-up-to-2-000/article-200234/";
+const CANARA_URL = "https://www.canarabank.bank.in/documents/d/guest/mdr-on-rupay-credit-card-on-upi-payments1";
+
+const faqs: Faq[] = [
+  { q: "What is the MDR on debit cards in India?", a: "RBI caps debit card MDR. For merchants with annual turnover up to ₹20 lakh: up to 0.40% (max ₹200) on card machines and online, or 0.30% (max ₹200) via QR. For other merchants: up to 0.90% (max ₹1,000) on card machines and online, or 0.80% (max ₹1,000) via QR. RuPay debit cards carry no charges." },
+  { q: "Is there MDR on RuPay debit cards?", a: "No. The government has notified under Section 10A of the Payment and Settlement Systems Act that no charges can be levied on RuPay debit card payments, at any amount." },
+  { q: "What are credit card MDR charges in India?", a: "There is no RBI cap on credit card MDR. Banks set it by merchant category, commonly around 1.5% to 2%, plus 18% GST. Check your bank or payment provider's rate and enter it in the calculator." },
+  { q: "Which payment method is cheapest for a merchant?", a: "RuPay debit cards and UPI payments up to ₹2,000 cost nothing. Above ₹2,000, UPI at 0.4% (max ₹300) is usually cheaper than Visa/Mastercard debit cards for larger merchants and much cheaper than credit cards." },
+  { q: "Can I charge customers extra for paying by card?", a: "No. RBI directs banks to ensure merchants do not pass debit card MDR on to customers, and the UPI rules also prohibit passing MDR on." },
+];
+
+const schemas = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "UPI vs Card Charges Calculator",
+    url: SITE + path,
+    description,
+    applicationCategory: "FinanceApplication",
+    operatingSystem: "All",
+    inLanguage: "en-IN",
+    dateModified: LAST_UPDATED_ISO,
+    offers: { "@type": "Offer", price: "0", priceCurrency: "INR" },
+  },
+  faqSchema(faqs),
+  breadcrumbSchema([
+    { name: "UPI MDR Calculator", url: SITE + "/" },
+    { name: "UPI vs Card Charges", url: SITE + path },
+  ]),
+];
+---
+
+<Base title={title} description={description} path={path} schemas={schemas}>
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Calculator</a> › UPI vs Card Charges</nav>
+  <h1>UPI vs Debit Card vs Credit Card: Which Costs a Merchant Less?</h1>
+  <p class="lead">Enter a payment amount to compare the MDR (payment charge) you'd pay for each method, under RBI rules and the new UPI rules from 15 October 2026.</p>
+
+  <section class="calc-card" aria-label="Payment method cost comparison">
+    <div class="grid2">
+      <div class="input-group">
+        <label for="amt">Payment amount (₹)</label>
+        <input type="number" id="amt" value="5000" min="0" step="any" inputmode="decimal" />
+      </div>
+      <div class="input-group">
+        <label for="turnover">Your annual turnover</label>
+        <select id="turnover">
+          <option value="small">Up to ₹20 lakh</option>
+          <option value="large" selected>Above ₹20 lakh</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label for="ccRate">Credit card MDR (%)</label>
+        <input type="number" id="ccRate" value="2" min="0" step="0.05" inputmode="decimal" />
+      </div>
+      <div class="input-group">
+        <label for="rupayCcRate">RuPay credit card on UPI MDR (%)</label>
+        <input type="number" id="rupayCcRate" value="1.75" min="0" step="0.05" inputmode="decimal" />
+      </div>
+    </div>
+    <label class="check"><input type="checkbox" id="smallUpi" /> <span>My UPI QR receipts are under ₹1 lakh a month <em>(zero UPI MDR)</em></span></label>
+    <label class="check"><input type="checkbox" id="gst" checked /> <span>Include 18% GST on MDR</span></label>
+
+    <div class="table-wrap">
+      <table class="cmp" aria-live="polite">
+        <thead><tr><th>Payment method</th><th>You pay</th><th>You receive</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <p class="note">Debit card figures are the maximum RBI allows; your bank may charge less. Credit card rates vary by bank, so edit them above.</p>
+  </section>
+
+  <article class="prose">
+    <h2>Payment charges at a glance</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>MDR for merchant</th></tr></thead>
+        <tbody>
+          <tr><td>UPI up to ₹2,000</td><td>Zero</td></tr>
+          <tr><td>UPI above ₹2,000</td><td>0.4%, max ₹300</td></tr>
+          <tr><td>UPI, small merchant (≤ ₹1 lakh/month)</td><td>Zero</td></tr>
+          <tr><td>RuPay debit card</td><td>Zero</td></tr>
+          <tr><td>Other debit cards, turnover ≤ ₹20 lakh</td><td>Up to 0.40% (QR 0.30%), max ₹200</td></tr>
+          <tr><td>Other debit cards, turnover &gt; ₹20 lakh</td><td>Up to 0.90% (QR 0.80%), max ₹1,000</td></tr>
+          <tr><td>Credit cards</td><td>Set by bank, often ~1.5–2%</td></tr>
+          <tr><td>RuPay credit card on UPI, above ₹2,000</td><td>Set by bank, e.g. 0.5–1.75%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>18% GST applies on top of MDR in each case.</p>
+
+    <h2>Debit card MDR: RBI rules</h2>
+    <p>
+      RBI's <a href={RBI_URL} rel="noopener">debit card MDR circular</a>, in force since 1 January 2018, caps what banks can charge merchants. Merchants with turnover up to ₹20 lakh in the previous year pay at most 0.40% on card machines and online payments (0.30% via QR), capped at ₹200 per payment. Larger merchants pay at most 0.90% (0.80% via QR), capped at ₹1,000.
+    </p>
+
+    <h2>RuPay debit card: zero MDR</h2>
+    <p>
+      In September 2026 the government notified, under Section 10A of the Payment and Settlement Systems Act, that <a href={S10A_URL} rel="noopener">no charges can be levied on RuPay debit card payments</a>, at any amount, or on UPI payments up to ₹2,000. For a merchant, a RuPay debit card is free to accept.
+    </p>
+
+    <h2>Credit card MDR</h2>
+    <p>
+      Credit card MDR has no RBI cap. Banks set it by merchant category, and it's usually the most expensive way to get paid. RuPay credit cards on UPI also follow card rules: Canara Bank, for example, <a href={CANARA_URL} rel="noopener">publishes rates</a> from 0.50% to 1.75% above ₹2,000. See our <a href="/rupay-credit-card-upi-charges/">RuPay credit card UPI charges</a> guide.
+    </p>
+
+    <h2>UPI: the cheapest option for most merchants</h2>
+    <p>
+      UPI remains free up to ₹2,000 and for small merchants. Above that, 0.4% capped at ₹300 is lower than debit cards for larger merchants and far lower than credit cards. Details are in <a href="/upi-charges-above-2000/">UPI charges above ₹2,000</a>, based on the <a href={OFFICIAL_FAQ_URL} rel="noopener">official FAQ</a>.
+    </p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      {faqs.map((f) => (<details><summary>{f.q}</summary><p>{f.a}</p></details>))}
+    </div>
+    <p class="updated">Last updated {LAST_UPDATED}. For information only; confirm rates with your bank or payment provider.</p>
+  </article>
+</Base>
+
+<script>
+  import { MDR_RATE, MDR_CAP, THRESHOLD, GST_RATE } from "../lib/mdr";
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+  const n = (id: string) => { const v = parseFloat($<HTMLInputElement>(id).value); return isFinite(v) ? Math.max(0, v) : 0; };
+  const inr = (v: number) => "₹" + v.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  function render() {
+    const amt = n("amt");
+    const small = $<HTMLSelectElement>("turnover").value === "small";
+    const smallUpi = $<HTMLInputElement>("smallUpi").checked;
+    const gst = $<HTMLInputElement>("gst").checked ? 1 + GST_RATE : 1;
+    const cap = (rate: number, max: number) => Math.min(amt * rate, max);
+
+    const rows: [string, number][] = [
+      ["UPI (bank account)", amt <= THRESHOLD || smallUpi ? 0 : cap(MDR_RATE, MDR_CAP)],
+      ["RuPay debit card", 0],
+      ["Visa/Mastercard debit – QR", small ? cap(0.003, 200) : cap(0.008, 1000)],
+      ["Visa/Mastercard debit – card machine/online", small ? cap(0.004, 200) : cap(0.009, 1000)],
+      ["RuPay credit card on UPI", amt <= THRESHOLD ? 0 : amt * n("rupayCcRate") / 100],
+      ["Credit card", amt * n("ccRate") / 100],
+    ];
+    const withGst = rows.map(([name, mdr]) => [name, mdr * gst] as [string, number]);
+    const min = Math.min(...withGst.map((r) => r[1]));
+    $("rows").innerHTML = withGst
+      .map(([name, fee]) => `<tr class="${fee === min ? "best" : ""}"><td>${name}${fee === min ? " <span class='tag'>cheapest</span>" : ""}</td><td>${inr(fee)}</td><td>${inr(amt - fee)}</td></tr>`)
+      .join("");
+  }
+  ["amt", "ccRate", "rupayCcRate"].forEach((id) => $(id).addEventListener("input", render));
+  ["turnover", "smallUpi", "gst"].forEach((id) => $(id).addEventListener("change", render));
+  render();
+</script>
+
+<style>
+  .calc-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin: 16px 0; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+  @media (max-width: 480px) { .grid2 { grid-template-columns: 1fr; } }
+  .input-group { margin-bottom: 14px; }
+  label { display: block; font-weight: 600; font-size: 0.88rem; margin-bottom: 6px; }
+  input[type="number"], select { width: 100%; padding: 11px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; background: var(--card); color: var(--text); }
+  .check { display: flex; gap: 10px; align-items: flex-start; font-weight: 500; margin-bottom: 10px; }
+  .check input { width: 18px; height: 18px; margin: 3px 0 0; accent-color: var(--primary); }
+  .check em { color: var(--muted); font-style: normal; font-weight: 400; }
+  .cmp { margin-top: 10px; }
+  .cmp td:first-child { white-space: normal; }
+  .cmp tr.best td { color: var(--green); font-weight: 600; }
+  .tag { font-size: 0.7rem; background: var(--green); color: var(--card); border-radius: 4px; padding: 1px 5px; margin-left: 4px; vertical-align: middle; }
+  .note { font-size: 0.8rem; color: var(--muted); margin: 10px 0 0; }
+</style>

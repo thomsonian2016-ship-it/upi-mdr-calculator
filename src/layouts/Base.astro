@@ -19,16 +19,16 @@ const hi = lang === "hi";
 const nav = hi
   ? [
       { href: "/hi/", label: "कैलकुलेटर" },
-      { href: "/upi-mdr-chart/", label: "MDR चार्ट" },
-      { href: "/upi-mdr-rules-2026/", label: "नियम" },
-      { href: "/is-upi-free/", label: "क्या UPI फ्री है?" },
+      { href: "/upi-charges-chart/", label: "चार्ज चार्ट" },
+      { href: "/upi-vs-card-charges/", label: "UPI बनाम कार्ड" },
+      { href: "/soundbox-charges/", label: "साउंडबॉक्स" },
       { href: "/", label: "English" },
     ]
   : [
       { href: "/", label: "Calculator" },
-      { href: "/upi-mdr-chart/", label: "MDR Chart" },
-      { href: "/upi-mdr-rules-2026/", label: "Rules" },
-      { href: "/is-upi-free/", label: "Is UPI Free?" },
+      { href: "/upi-charges-chart/", label: "Charges Chart" },
+      { href: "/upi-vs-card-charges/", label: "UPI vs Card" },
+      { href: "/soundbox-charges/", label: "Soundbox" },
       { href: "/hi/", label: "हिंदी" },
     ];
 ---
@@ -92,16 +92,29 @@ const nav = hi
     </main>
 
     <footer class="site-footer">
-      <nav aria-label="Footer">
-        <a href="/">UPI MDR Calculator</a>
-        <a href="/hi/" lang="hi">हिंदी कैलकुलेटर</a>
-        <a href="/upi-mdr-chart/">UPI MDR Chart</a>
-        <a href="/upi-mdr-rules-2026/">UPI Charges Above ₹2,000</a>
-        <a href="/is-upi-free/">Is UPI Free?</a>
-        <a href="/rupay-credit-card-upi-charges/">RuPay Credit Card UPI Charges</a>
-        <a href="/about/">About</a>
-        <a href="/privacy/">Privacy</a>
-      </nav>
+      <div class="footer-cols">
+        <nav aria-label="Tools">
+          <strong>Tools</strong>
+          <a href="/">UPI Charges Calculator</a>
+          <a href="/hi/" lang="hi">हिंदी कैलकुलेटर</a>
+          <a href="/upi-charges-chart/">UPI Charges Chart</a>
+          <a href="/upi-vs-card-charges/">UPI vs Card Charges</a>
+          <a href="/soundbox-charges/">Soundbox Charges</a>
+        </nav>
+        <nav aria-label="Guides">
+          <strong>Guides</strong>
+          <a href="/upi-charges-above-2000/">UPI Charges Above ₹2,000</a>
+          <a href="/is-upi-free/">Is UPI Free?</a>
+          <a href="/what-is-mdr/">What is MDR?</a>
+          <a href="/rupay-credit-card-upi-charges/">RuPay Credit Card on UPI</a>
+          <a href="/upi-gst-income-tax-notice/">UPI, GST &amp; Income Tax</a>
+        </nav>
+        <nav aria-label="Site">
+          <strong>Site</strong>
+          <a href="/about/">About</a>
+          <a href="/privacy/">Privacy</a>
+        </nav>
+      </div>
       <p>
         {hi
           ? "यह कैलकुलेटर केवल जानकारी के लिए है, यह वित्तीय या कर सलाह नहीं है। वास्तविक शुल्क आपके बैंक, पेमेंट प्रोवाइडर और मर्चेंट कैटेगरी पर निर्भर करते हैं।"
@@ -173,7 +186,9 @@ const nav = hi
     color: var(--muted);
     text-align: center;
   }
-  .site-footer nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 14px; margin-bottom: 10px; }
+  .footer-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; text-align: left; margin-bottom: 16px; }
+  .footer-cols nav { display: flex; flex-direction: column; gap: 6px; }
+  .footer-cols strong { color: var(--text); font-size: 0.85rem; }
   .site-footer a { color: var(--muted); }
   h1 { font-size: 1.8rem; line-height: 1.25; margin: 12px 0 8px; }
   h2 { font-size: 1.25rem; margin-top: 28px; }

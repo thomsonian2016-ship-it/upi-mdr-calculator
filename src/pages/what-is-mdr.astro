@@ -1,0 +1,110 @@
+---
+import Base from "../layouts/Base.astro";
+import { SITE, LAST_UPDATED, LAST_UPDATED_ISO, OFFICIAL_FAQ_URL, faqSchema, breadcrumbSchema, type Faq } from "../lib/mdr";
+
+const title = "What is MDR? Meaning, Full Form & MDR Charges Explained (Hindi)";
+const description = "MDR meaning: Merchant Discount Rate, the fee a shop pays to accept UPI or card payments. Full form, examples, P2PM vs P2M, and MDR kya hota hai in Hindi.";
+const path = "/what-is-mdr/";
+
+const faqs: Faq[] = [
+  { q: "What is the full form of MDR?", a: "MDR stands for Merchant Discount Rate. It is the fee a merchant pays for accepting a digital payment such as UPI, a debit card or a credit card." },
+  { q: "What does MDR charges mean?", a: "MDR charges are the amount deducted from a merchant's settlement for a digital payment. For example, 0.4% MDR on a ₹5,000 UPI payment is ₹20, so the merchant receives ₹4,980 before GST." },
+  { q: "MDR kya hota hai?", a: "MDR yaani Merchant Discount Rate woh fee hai jo dukaandar digital payment (UPI ya card) lene par apne bank ko deta hai. Customer ko kuch extra nahi dena hota; fee dukaandar ke settlement se kat-ti hai." },
+  { q: "What is P2PM and P2M in UPI?", a: "P2PM means person-to-person-merchant: small merchants receiving up to ₹1 lakh a month through UPI QR, who pay zero MDR. P2M means person-to-merchant: regular merchants, who pay 0.4% MDR on UPI payments above ₹2,000 from 15 October 2026." },
+  { q: "Who gets the MDR money?", a: "MDR is shared among the organisations that process the payment, such as the merchant's bank, the customer's bank or app, and the payment network, to cover the cost of running the system." },
+  { q: "What does 'MDR recovery' mean in my statement?", a: "It is usually your bank or payment provider's label for fees deducted from your settlements, for example MDR on card payments or RuPay credit card on UPI. It is not an official NPCI term. Ask your bank for the fee breakup." },
+];
+
+const schemas = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description,
+    inLanguage: "en-IN",
+    datePublished: LAST_UPDATED_ISO,
+    dateModified: LAST_UPDATED_ISO,
+    mainEntityOfPage: SITE + path,
+    image: SITE + "/og-image.png",
+    author: { "@type": "Organization", name: "UPI MDR Calculator", url: SITE + "/" },
+    publisher: { "@type": "Organization", name: "UPI MDR Calculator", url: SITE + "/" },
+    about: { "@type": "DefinedTerm", name: "Merchant Discount Rate (MDR)" },
+  },
+  faqSchema(faqs),
+  breadcrumbSchema([
+    { name: "UPI MDR Calculator", url: SITE + "/" },
+    { name: "What is MDR?", url: SITE + path },
+  ]),
+];
+---
+
+<Base title={title} description={description} path={path} schemas={schemas} ogType="article">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Calculator</a> › What is MDR?</nav>
+  <article class="prose">
+    <h1>What is MDR? Meaning and Full Form</h1>
+    <p class="updated">Last updated {LAST_UPDATED}</p>
+
+    <div class="answer">
+      <p><strong>MDR stands for Merchant Discount Rate.</strong> It's the fee a shop or business pays its bank for accepting a digital payment, like UPI, a debit card or a credit card. It's deducted from the money the merchant receives. The customer doesn't pay it.</p>
+    </div>
+
+    <h2>MDR meaning, with an example</h2>
+    <p>
+      Say a customer pays ₹5,000 by UPI to a regular merchant after 15 October 2026. The MDR is 0.4%, so ₹20 is deducted. With 18% GST on that fee (₹3.60), the merchant receives <strong>₹4,976.40</strong>. The customer still pays exactly ₹5,000.
+    </p>
+    <p><a class="cta" href="/">Calculate MDR on any amount →</a></p>
+
+    <h2>Why is it called a "discount"?</h2>
+    <p>
+      The merchant receives the payment at a small "discount" from its full value: ₹5,000 paid, a bit less received. The discount is the fee for processing the payment.
+    </p>
+
+    <h2>Who gets the MDR?</h2>
+    <p>
+      MDR is shared among the organisations that make the payment work: the merchant's bank (acquirer), the customer's bank or app, and the payment network. It pays for fraud checks, servers, settlement and customer support.
+    </p>
+
+    <h2>MDR rates in India</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Payment method</th><th>MDR</th></tr></thead>
+        <tbody>
+          <tr><td>UPI up to ₹2,000</td><td>Zero</td></tr>
+          <tr><td>UPI above ₹2,000 (from 15 Oct 2026)</td><td>0.4%, max ₹300</td></tr>
+          <tr><td>RuPay debit card</td><td>Zero</td></tr>
+          <tr><td>Other debit cards</td><td>Up to 0.40%–0.90% (RBI caps)</td></tr>
+          <tr><td>Credit cards</td><td>Set by bank, often ~1.5–2%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Compare them for your amount with the <a href="/upi-vs-card-charges/">UPI vs card charges calculator</a>.</p>
+
+    <h2>P2PM vs P2M: which one are you?</h2>
+    <p>For UPI, merchants fall into two groups under the <a href={OFFICIAL_FAQ_URL} rel="noopener">official framework</a>:</p>
+    <ul>
+      <li><strong>P2PM (person-to-person-merchant):</strong> small merchants receiving up to ₹1 lakh a month through UPI QR. <strong>Zero MDR</strong>, even on payments above ₹2,000. No GST registration needed.</li>
+      <li><strong>P2M (person-to-merchant):</strong> regular merchants. 0.4% MDR on UPI payments above ₹2,000, capped at ₹300. A P2PM merchant moves here after crossing ₹1 lakh a month for 3 months in a row.</li>
+    </ul>
+
+    <h2>Where you'll see MDR</h2>
+    <p>
+      MDR shows up in your bank's or payment app's settlement report, often as "MDR", "MDR charges" or "MDR recovery", with GST shown separately. If a deduction doesn't match what you expect, ask your bank for the fee breakup.
+    </p>
+
+    <h2 lang="hi">MDR क्या होता है? (हिंदी में)</h2>
+    <div lang="hi">
+      <p><strong>MDR का पूरा नाम मर्चेंट डिस्काउंट रेट है।</strong> यह वह शुल्क है जो दुकानदार डिजिटल पेमेंट (UPI, डेबिट या क्रेडिट कार्ड) लेने पर अपने बैंक को देता है। यह दुकानदार को मिलने वाली राशि से कटता है; ग्राहक को कुछ अतिरिक्त नहीं देना होता।</p>
+      <p><strong>उदाहरण:</strong> 15 अक्टूबर 2026 के बाद ₹5,000 के UPI पेमेंट पर 0.4% यानी ₹20 MDR और उस पर ₹3.60 GST कटेगा। दुकानदार को ₹4,976.40 मिलेंगे।</p>
+      <p><strong>छोटे दुकानदार</strong> जिन्हें UPI QR से महीने में ₹1 लाख तक मिलता है, उन्हें कोई MDR नहीं देना होगा। अपना हिसाब <a href="/hi/">हिंदी कैलकुलेटर</a> में देखें।</p>
+    </div>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      {faqs.map((f) => (<details><summary>{f.q}</summary><p>{f.a}</p></details>))}
+    </div>
+  </article>
+</Base>
+
+<style>
+  .answer { background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--primary); border-radius: 8px; padding: 4px 16px; margin: 16px 0; }
+</style>

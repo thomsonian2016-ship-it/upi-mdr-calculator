@@ -2,9 +2,9 @@
 import Base from "../layouts/Base.astro";
 import { SITE, LAST_UPDATED, LAST_UPDATED_ISO, calc, inr, inr0, faqSchema, breadcrumbSchema, type Faq } from "../lib/mdr";
 
-const title = "UPI MDR Chart 2026: Charges on ₹2,000 to ₹1 Lakh Payments";
+const title = "UPI Charges Chart 2026: ₹2,000 to ₹1 Lakh (MDR + GST)";
 const description = "UPI MDR ready-reckoner from 15 Oct 2026: MDR, 18% GST and net settlement for every common payment from ₹2,000 to ₹1 lakh, under the new NPCI rules.";
-const path = "/upi-mdr-chart/";
+const path = "/upi-charges-chart/";
 
 const amounts: number[] = [2000];
 for (let a = 2500; a <= 10000; a += 500) amounts.push(a);
@@ -36,21 +36,21 @@ const schemas = [
   faqSchema(faqs),
   breadcrumbSchema([
     { name: "UPI MDR Calculator", url: SITE + "/" },
-    { name: "UPI MDR Chart", url: SITE + path },
+    { name: "UPI Charges Chart", url: SITE + path },
   ]),
 ];
 ---
 
 <Base title={title} description={description} path={path} schemas={schemas} ogType="article">
-  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Calculator</a> › UPI MDR Chart</nav>
-  <h1>UPI MDR Chart: Charges from ₹2,000 to ₹1 Lakh</h1>
-  <p class="lead">MDR, GST and net settlement for a standard merchant under the rules from <strong>15 October 2026</strong>. Click any amount to open it in the calculator.</p>
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Calculator</a> › UPI Charges Chart</nav>
+  <h1>UPI Charges Chart: ₹2,000 to ₹1 Lakh</h1>
+  <p class="lead">UPI charges (MDR), GST and net settlement for a standard merchant under the rules from <strong>15 October 2026</strong>. Click any amount to open it in the calculator.</p>
   <p class="updated">Last updated {LAST_UPDATED}</p>
 
   <div class="table-wrap">
     <table>
       <thead>
-        <tr><th>Payment</th><th>MDR (0.4%)</th><th>GST (18%)</th><th>Total deduction</th><th>Merchant receives</th></tr>
+        <tr><th>Payment</th><th>MDR / UPI charge (0.4%)</th><th>GST (18%)</th><th>Total deduction</th><th>Merchant receives</th></tr>
       </thead>
       <tbody>
         {rows.map((r) => (
@@ -83,7 +83,7 @@ const schemas = [
       <li><strong>RuPay credit card</strong> payments on UPI follow <a href="/rupay-credit-card-upi-charges/">card MDR rates</a> instead.</li>
       <li><strong>Person-to-person</strong> transfers never attract MDR.</li>
     </ul>
-    <p>For these cases, or any other amount, use the <a href="/">UPI MDR calculator</a>. The full rules are explained in <a href="/upi-mdr-rules-2026/">UPI charges above ₹2,000: new rules</a>.</p>
+    <p>For these cases, or any other amount, use the <a href="/">UPI MDR calculator</a>. The full rules are explained in <a href="/upi-charges-above-2000/">UPI charges above ₹2,000: new rules</a>.</p>
 
     <h2>Quick answers</h2>
     <div class="faq">

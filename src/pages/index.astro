@@ -48,8 +48,8 @@ const schemas = [
 
 <Base title={title} description={description} path="/" lang="en" alternates={{ en: "/", hi: "/hi/" }} schemas={schemas}>
   <header class="page-head">
-    <h1>UPI MDR Calculator</h1>
-    <p class="sub">Calculate UPI charges on payments above ₹2,000</p>
+    <h1>UPI Charges Calculator</h1>
+    <p class="sub">UPI MDR calculator for payments above ₹2,000</p>
     <p class="lead">See the MDR, GST and net amount a merchant receives on any UPI payment under the new rules from <strong>15 October 2026</strong>.</p>
   </header>
 
@@ -75,7 +75,7 @@ const schemas = [
       <li><strong>GST:</strong> 18% on the MDR fee only, not on the payment amount.</li>
       <li><strong>RuPay credit card on UPI:</strong> different, higher card rates. See <a href="/rupay-credit-card-upi-charges/">RuPay credit card UPI charges</a>.</li>
     </ul>
-    <p>Read the full breakdown of <a href="/upi-mdr-rules-2026/">UPI charges above ₹2,000</a>, checked against the <a href={OFFICIAL_FAQ_URL} rel="noopener">official government FAQ</a>.</p>
+    <p>Read the full breakdown of <a href="/upi-charges-above-2000/">UPI charges above ₹2,000</a>, checked against the <a href={OFFICIAL_FAQ_URL} rel="noopener">official government FAQ</a>.</p>
 
     <h3>How the calculation works</h3>
     <p>
@@ -94,8 +94,17 @@ const schemas = [
         </tbody>
       </table>
     </div>
-    <p>Need a specific amount? See the full <a href="/upi-mdr-chart/">UPI MDR chart from ₹2,000 to ₹1 lakh</a>.</p>
+    <p>Need a specific amount? See the full <a href="/upi-charges-chart/">UPI charges chart from ₹2,000 to ₹1 lakh</a>.</p>
     <p lang="hi">यह कैलकुलेटर <a href="/hi/">हिंदी में</a> भी उपलब्ध है।</p>
+
+    <h2>More tools and guides for merchants</h2>
+    <ul>
+      <li><a href="/upi-vs-card-charges/">UPI vs debit card vs credit card charges</a>: which payment costs you least</li>
+      <li><a href="/soundbox-charges/">Soundbox charges</a>: PhonePe vs Google Pay vs Paytm per month</li>
+      <li><a href="/what-is-mdr/">What is MDR?</a> Meaning, full form, P2PM vs P2M</li>
+      <li><a href="/upi-gst-income-tax-notice/">Can UPI payments trigger a GST or income tax notice?</a></li>
+      <li><a href="/is-upi-free/">Is UPI still free for customers?</a></li>
+    </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq">

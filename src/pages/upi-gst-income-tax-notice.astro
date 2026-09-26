@@ -1,0 +1,120 @@
+---
+import Base from "../layouts/Base.astro";
+import { SITE, LAST_UPDATED, LAST_UPDATED_ISO, faqSchema, breadcrumbSchema, type Faq } from "../lib/mdr";
+
+const title = "UPI Payments & Tax: Can UPI Trigger a GST or Income Tax Notice?";
+const description = "Is there GST or income tax on UPI transactions? When UPI receipts lead to GST notices, registration limits, the 6% rate under 44AD, and what to do.";
+const path = "/upi-gst-income-tax-notice/";
+
+const IT_URL = "https://www.incometaxindia.gov.in/w/tax-on-presumptive-basis-in-case-of-certain-businesses";
+const GST_LIMIT_URL = "https://cleartax.in/s/gst-registration-limits-increased";
+const KARNATAKA_URL = "https://www.businesstoday.in/amp/india/story/show-us-your-exemptions-well-close-it-gst-official-breaks-down-upi-based-notices-in-karnataka-485920-2025-07-23";
+const NO_GST_UPI_URL = "https://www.tribuneindia.com/news/business/no-plan-to-levy-gst-on-upi-transactions-above-rs-2000-govt";
+
+const faqs: Faq[] = [
+  { q: "Is there GST on UPI transactions?", a: "No. There is no GST on UPI payments themselves, and the government has said it has no plan to levy GST on UPI transactions above ₹2,000. GST applies only to the MDR fee a merchant's bank charges, not to the payment amount." },
+  { q: "Can UPI payments lead to a GST notice?", a: "Yes, indirectly. Tax departments can use UPI receipt data to estimate a business's turnover. If a trader's receipts suggest turnover above the GST registration limit and they aren't registered, they may get a notice. In Karnataka in 2025, thousands of traders received such notices." },
+  { q: "What is the GST registration limit for shopkeepers?", a: "In most states, registration is required when aggregate turnover crosses ₹40 lakh for goods or ₹20 lakh for services. Some special category states have lower limits (₹20 lakh for goods, ₹10 lakh for services). Aggregate turnover includes exempt supplies." },
+  { q: "Is there a UPI limit to avoid an income tax notice?", a: "There is no official UPI transaction limit that triggers an income tax notice. Income tax is based on your income, not how you're paid. What matters is that you report your business income correctly." },
+  { q: "Is income from UPI payments taxable?", a: "Business income is taxable whether received in cash or by UPI. For small businesses using presumptive taxation under Section 44AD, profit is taken as 6% of digital receipts (including UPI) instead of 8% for cash, which lowers tax." },
+  { q: "I sell only vegetables or fruits. Do I need GST registration?", a: "Fresh vegetables and fruits are generally exempt from GST, and a person supplying only exempt goods is not required to register. In the Karnataka notices, officials said cases would be closed if traders showed they deal in exempt goods. Keep purchase records and consult a tax professional." },
+];
+
+const schemas = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description,
+    inLanguage: "en-IN",
+    datePublished: LAST_UPDATED_ISO,
+    dateModified: LAST_UPDATED_ISO,
+    mainEntityOfPage: SITE + path,
+    image: SITE + "/og-image.png",
+    author: { "@type": "Organization", name: "UPI MDR Calculator", url: SITE + "/" },
+    publisher: { "@type": "Organization", name: "UPI MDR Calculator", url: SITE + "/" },
+    citation: [IT_URL, GST_LIMIT_URL, KARNATAKA_URL],
+  },
+  faqSchema(faqs),
+  breadcrumbSchema([
+    { name: "UPI MDR Calculator", url: SITE + "/" },
+    { name: "UPI, GST & Income Tax", url: SITE + path },
+  ]),
+];
+---
+
+<Base title={title} description={description} path={path} schemas={schemas} ogType="article">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Calculator</a> › UPI, GST &amp; Income Tax</nav>
+  <article class="prose">
+    <h1>UPI Payments and Tax: GST and Income Tax Notices Explained</h1>
+    <p class="updated">Last updated {LAST_UPDATED} · General information, not tax advice</p>
+
+    <div class="answer">
+      <p><strong>There is no GST or income tax on UPI transactions themselves.</strong> But UPI leaves a clear record of what your business receives. Tax departments can use that record to check whether you should be registered for GST or paying income tax. The payment method doesn't matter; your turnover and income do.</p>
+    </div>
+
+    <h2>Is there GST on UPI payments?</h2>
+    <p>
+      No. Paying or receiving money by UPI doesn't attract GST, and the government has stated it has <a href={NO_GST_UPI_URL} rel="noopener">no plan to levy GST on UPI transactions above ₹2,000</a>. The only GST connected to UPI is 18% on the small MDR fee a merchant's bank charges on payments above ₹2,000 from 15 October 2026. See <a href="/upi-charges-above-2000/">UPI charges above ₹2,000</a>.
+    </p>
+
+    <h2>Why traders get GST notices based on UPI</h2>
+    <p>
+      UPI receipts show how much money a business takes in. If those receipts suggest your turnover is above the GST registration limit and you're not registered, the GST department may send a notice asking you to explain or register. In 2025, <a href={KARNATAKA_URL} rel="noopener">thousands of traders in Karnataka</a> received notices based on UPI data. Officials said notices would be closed where traders showed they sold exempt goods or had other explanations.
+    </p>
+
+    <h2>GST registration limits</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Business type</th><th>Most states</th><th>Some special category states</th></tr></thead>
+        <tbody>
+          <tr><td>Supplying goods</td><td>₹40 lakh</td><td>₹20 lakh</td></tr>
+          <tr><td>Supplying services</td><td>₹20 lakh</td><td>₹10 lakh</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      These limits apply to aggregate turnover for the year, which includes exempt supplies. Limits vary by state, so check yours. Source: <a href={GST_LIMIT_URL} rel="noopener">GST registration thresholds</a>.
+    </p>
+    <p>
+      <strong>Selling only exempt goods?</strong> A person supplying only GST-exempt goods, such as fresh vegetables or fruits, generally doesn't need to register, even above these limits. Keep purchase and sales records that show this.
+    </p>
+
+    <h2>Income tax on UPI receipts</h2>
+    <p>
+      There's no special income tax on UPI, and no official UPI transaction limit that triggers an income tax notice. Your business income is taxable whether you're paid in cash or by UPI. What matters is reporting it correctly in your return.
+    </p>
+    <h3>UPI can actually lower your tax (Section 44AD)</h3>
+    <p>
+      Small businesses can use presumptive taxation under <a href={IT_URL} rel="noopener">Section 44AD</a>, where profit is taken as a fixed percentage of turnover instead of keeping full accounts:
+    </p>
+    <ul>
+      <li><strong>8%</strong> of turnover received in cash.</li>
+      <li><strong>6%</strong> of turnover received through digital modes such as bank transfer and UPI, which means lower taxable profit.</li>
+      <li>Available to resident individuals, HUFs and partnership firms (not LLPs) with turnover up to <strong>₹2 crore</strong>, or <strong>₹3 crore</strong> if cash receipts are no more than 5% of turnover.</li>
+    </ul>
+    <p class="updated">These provisions may be renumbered under the new Income-tax Act, 2025. Confirm the current section and rates with a tax professional.</p>
+
+    <h2>What shopkeepers should do</h2>
+    <ul>
+      <li><strong>Know your yearly turnover</strong>, counting UPI, cards and cash, and compare it with your state's GST limit.</li>
+      <li><strong>Register for GST</strong> before you cross the limit, unless you only sell exempt goods.</li>
+      <li><strong>Keep business and personal UPI separate</strong>, for example with a business QR or current account, so personal transfers aren't mistaken for sales.</li>
+      <li><strong>Keep purchase bills and sales records</strong> to explain your receipts if asked.</li>
+      <li><strong>Don't ignore a notice.</strong> Reply by the deadline with your records, ideally with help from a CA or tax practitioner.</li>
+      <li><strong>Consider going more digital:</strong> under 44AD, digital receipts are taxed on a lower presumed profit.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      {faqs.map((f) => (<details><summary>{f.q}</summary><p>{f.a}</p></details>))}
+    </div>
+
+    <p>Related: <a href="/is-upi-free/">Is UPI free for customers?</a> · <a href="/what-is-mdr/">What is MDR?</a> · <a href="/">UPI charges calculator</a></p>
+    <p class="updated">This page is general information for small businesses in India and is not tax or legal advice. Tax rules change; consult a qualified professional about your situation.</p>
+  </article>
+</Base>
+
+<style>
+  .answer { background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--primary); border-radius: 8px; padding: 4px 16px; margin: 16px 0; }
+</style>

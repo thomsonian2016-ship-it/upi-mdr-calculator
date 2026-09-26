@@ -1,0 +1,135 @@
+---
+import Base from "../layouts/Base.astro";
+import { SITE, LAST_UPDATED, LAST_UPDATED_ISO, inr0, faqSchema, breadcrumbSchema, type Faq } from "../lib/mdr";
+
+const title = "PhonePe vs Paytm vs Google Pay Soundbox Charges 2026 (Per Month)";
+const description = "Soundbox charges per month compared: PhonePe SmartSpeaker, Google Pay SoundPod and Paytm. Setup fees, monthly rent, zero-rental plans and yearly cost.";
+const path = "/soundbox-charges/";
+
+const PHONEPE_URL = "https://cms.phonepe.com/en/mx/merchant-help/phonepe-smartspeaker/about-phonepe-smartspeaker/what-are-charges-applicable-phonepe-smartspeaker/";
+const GPAY_URL = "https://support.google.com/pay-offline-merchants/answer/15593560?hl=en";
+
+// First-year cost = one-time fee + 12 months (PhonePe bills every 30 days, so ~12.17 cycles a year)
+const plans = [
+  { name: "PhonePe SmartSpeaker – Monthly plan", setup: 318, monthly: "₹125 every 30 days", year1: 318 + Math.round(125 * 365 / 30), year2: Math.round(125 * 365 / 30) },
+  { name: "PhonePe SmartSpeaker – Zero Rental plan", setup: 999, monthly: "₹25 a month", year1: 999 + 25 * 12, year2: 25 * 12 },
+  { name: "Google Pay SoundPod – Monthly plan", setup: 499, monthly: "₹125 a month", year1: 499 + 125 * 12, year2: 125 * 12 },
+  { name: "Google Pay SoundPod – Annual plan", setup: 0, monthly: "₹1,499 a year", year1: 1499, year2: 1499 },
+];
+const cheapest1 = Math.min(...plans.map((p) => p.year1));
+
+const faqs: Faq[] = [
+  { q: "What are PhonePe soundbox charges per month?", a: "PhonePe SmartSpeaker has two plans: ₹318 setup plus ₹125 every 30 days, or the Zero Rental plan with ₹999 one-time (including GST) plus ₹25 a month. Fees are deducted from your settlements." },
+  { q: "What are Google Pay SoundPod charges?", a: "Google Pay SoundPod costs ₹499 one-time plus ₹125 a month, or ₹1,499 for a year. Prices include taxes. You can get ₹125 cashback in a month if you receive 400+ payments from at least 30 different people through Google Pay QR." },
+  { q: "What are Paytm Soundbox charges per month?", a: "Paytm shows Soundbox plans and prices inside the Paytm for Business app, and they vary by device and offer. Check the app for the current price before you order." },
+  { q: "Which soundbox is cheapest?", a: "Over the first year, the PhonePe Zero Rental plan (about ₹1,299) and the Google Pay annual plan (₹1,499) are the cheapest of the published plans. From the second year, PhonePe Zero Rental costs about ₹300 a year." },
+  { q: "Is the soundbox fee the same as the UPI MDR charge?", a: "No. The soundbox fee is a device rental you pay your app. MDR is the separate payment charge on UPI payments above ₹2,000 from 15 October 2026. Small merchants under ₹1 lakh a month pay zero MDR." },
+  { q: "Do I need a soundbox to accept UPI?", a: "No. A printed QR code is free and works on its own. A soundbox just announces each payment so you don't need to check your phone." },
+];
+
+const schemas = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description,
+    inLanguage: "en-IN",
+    datePublished: LAST_UPDATED_ISO,
+    dateModified: LAST_UPDATED_ISO,
+    mainEntityOfPage: SITE + path,
+    image: SITE + "/og-image.png",
+    author: { "@type": "Organization", name: "UPI MDR Calculator", url: SITE + "/" },
+    publisher: { "@type": "Organization", name: "UPI MDR Calculator", url: SITE + "/" },
+    citation: [PHONEPE_URL, GPAY_URL],
+  },
+  faqSchema(faqs),
+  breadcrumbSchema([
+    { name: "UPI MDR Calculator", url: SITE + "/" },
+    { name: "Soundbox Charges", url: SITE + path },
+  ]),
+];
+---
+
+<Base title={title} description={description} path={path} schemas={schemas} ogType="article">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Calculator</a> › Soundbox Charges</nav>
+  <article class="prose">
+    <h1>Soundbox Charges: PhonePe vs Google Pay vs Paytm</h1>
+    <p class="updated">Last updated {LAST_UPDATED} · Prices from PhonePe and Google Pay's official help pages</p>
+    <p class="lead">What a UPI soundbox really costs per month and per year, so you can pick the cheapest plan for your shop.</p>
+
+    <h2>Soundbox charges compared</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Plan</th><th>One-time</th><th>Ongoing</th><th>1st year</th><th>2nd year</th></tr></thead>
+        <tbody>
+          {plans.map((p) => (
+            <tr class={p.year1 === cheapest1 ? "best" : ""}>
+              <td class="wrap">{p.name}</td>
+              <td>{p.setup ? inr0(p.setup) : "—"}</td>
+              <td>{p.monthly}</td>
+              <td>≈ {inr0(p.year1)}</td>
+              <td>≈ {inr0(p.year2)}</td>
+            </tr>
+          ))}
+          <tr>
+            <td class="wrap">Paytm Soundbox</td>
+            <td colspan="4" class="wrap">Shown in the Paytm for Business app; varies by device and offer</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="updated">Year estimates assume 12 months of use and that annual plans renew at the same price. GST is included where the provider says so. Prices can change; check the app before ordering.</p>
+
+    <h2>PhonePe SmartSpeaker charges</h2>
+    <p>According to <a href={PHONEPE_URL} rel="noopener">PhonePe's merchant help page</a>, you can choose between two plans:</p>
+    <ul>
+      <li><strong>Monthly plan:</strong> ₹318 one-time setup, then ₹125 every 30 days, deducted from your settlements.</li>
+      <li><strong>Zero Rental plan:</strong> ₹999 one-time (including GST), then ₹25 a month until you cancel.</li>
+    </ul>
+    <p>If you'll keep the speaker for more than about a year, the Zero Rental plan is much cheaper overall.</p>
+
+    <h2>Google Pay SoundPod charges</h2>
+    <p>According to <a href={GPAY_URL} rel="noopener">Google Pay's help page</a> (all prices include taxes):</p>
+    <ul>
+      <li><strong>Monthly plan:</strong> ₹499 one-time, then ₹125 a month. If you set up mid-month, you pay ₹5 a day until month-end.</li>
+      <li><strong>Annual plan:</strong> ₹1,499 for one year.</li>
+      <li><strong>Cashback:</strong> ₹125 back in any month where you receive 400+ payments from at least 30 unique customers through Google Pay QR. That can make the monthly rent effectively free for busy shops.</li>
+      <li><strong>Warranty:</strong> 6 months. Replacement after that costs ₹400.</li>
+    </ul>
+
+    <h2>Paytm Soundbox charges</h2>
+    <p>
+      Paytm lists its Soundbox plans inside the Paytm for Business app rather than on a public price page, and the price depends on the model (such as 4G, NFC or AI Soundbox) and current offers. Before ordering, compare the one-time fee and monthly rent in the app against the PhonePe and Google Pay plans above.
+    </p>
+
+    <h2>Bank soundboxes (SBI, HDFC, ICICI, Bank of Baroda, PNB, Canara)</h2>
+    <p>
+      Many banks offer their own soundbox with a bank QR code. Charges differ by bank and branch, so ask your bank for the setup fee, the monthly rent, and whether rent is waived above a certain number of payments.
+    </p>
+
+    <h2>Soundbox fee vs UPI charges (MDR)</h2>
+    <p>
+      The soundbox fee is only for the device. It's separate from the new <a href="/upi-charges-above-2000/">UPI charge (MDR) on payments above ₹2,000</a> that starts on 15 October 2026. Small shops receiving up to ₹1 lakh a month through UPI QR pay zero MDR. Use the <a href="/">UPI charges calculator</a> to see what you'll actually receive on any payment.
+    </p>
+
+    <h2 lang="hi">साउंडबॉक्स चार्ज: हिंदी में</h2>
+    <div lang="hi">
+      <ul>
+        <li><strong>PhonePe स्मार्टस्पीकर:</strong> ₹318 सेटअप + हर 30 दिन ₹125, या ज़ीरो रेंटल प्लान में ₹999 एक बार + ₹25 महीना।</li>
+        <li><strong>Google Pay साउंडपॉड:</strong> ₹499 एक बार + ₹125 महीना, या ₹1,499 सालाना। महीने में 30+ ग्राहकों से 400+ पेमेंट पर ₹125 कैशबैक।</li>
+        <li><strong>Paytm साउंडबॉक्स:</strong> कीमत Paytm for Business ऐप में देखें।</li>
+      </ul>
+      <p>साउंडबॉक्स का किराया UPI MDR चार्ज से अलग है। <a href="/hi/">UPI चार्ज कैलकुलेटर</a> से देखें कि आपको कितना पैसा मिलेगा।</p>
+    </div>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      {faqs.map((f) => (<details><summary>{f.q}</summary><p>{f.a}</p></details>))}
+    </div>
+  </article>
+</Base>
+
+<style>
+  td.wrap { white-space: normal; min-width: 150px; }
+  tr.best td { color: var(--green); font-weight: 600; }
+</style>
