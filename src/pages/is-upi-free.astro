@@ -1,0 +1,109 @@
+---
+import Base from "../layouts/Base.astro";
+import { SITE, LAST_UPDATED, LAST_UPDATED_ISO, OFFICIAL_FAQ_URL, faqSchema, breadcrumbSchema, type Faq } from "../lib/mdr";
+
+const title = "Is UPI Still Free? Kya UPI Par Charge Lagega from 15 October?";
+const description = "Yes, UPI stays free for customers after 15 Oct 2026: no charge on payments, QR scans or sending money. Only merchants pay a small fee above ₹2,000.";
+const path = "/is-upi-free/";
+
+const faqs: Faq[] = [
+  { q: "Is UPI free after 15 October 2026?", a: "Yes, for customers. You pay no extra charge when you pay a shop, scan a QR code or send money to someone. The new 0.4% fee is paid by merchants on payments above ₹2,000." },
+  { q: "Kya UPI par charge lagega?", a: "Nahi, customer ke liye UPI free rahega. Dukaan par payment, QR scan ya kisi ko paise bhejne par koi extra charge nahi lagega. 15 October 2026 se sirf merchant ko ₹2,000 se upar ke payment par 0.4% MDR dena hoga." },
+  { q: "UPI par kitna charge lagega?", a: "Customer ke liye ₹0. Merchant ke liye ₹2,000 tak ke payment par ₹0, aur ₹2,000 se upar 0.4% (maximum ₹300). Chhote dukaandar jinki UPI QR se mahine ki kamai ₹1 lakh tak hai, unhe bhi koi charge nahi." },
+  { q: "Will I be charged for sending money to friends or family?", a: "No. Person-to-person (P2P) UPI transfers are free at any amount." },
+  { q: "Can a shop charge me extra for paying by UPI?", a: "No. Merchants are not allowed to pass the MDR on to customers. If a shop adds a UPI surcharge, you can raise it with the merchant's bank or payment provider." },
+  { q: "Can PhonePe, Google Pay or Paytm charge me a fee for UPI?", a: "Not under this framework. UPI apps are not allowed to charge users a platform fee for UPI payments." },
+  { q: "Is there a limit on free UPI payments per month?", a: "No. There is no monthly cap on free UPI payments for customers." },
+];
+
+const schemas = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description,
+    inLanguage: "en-IN",
+    datePublished: LAST_UPDATED_ISO,
+    dateModified: LAST_UPDATED_ISO,
+    mainEntityOfPage: SITE + path,
+    image: SITE + "/og-image.png",
+    author: { "@type": "Organization", name: "UPI MDR Calculator", url: SITE + "/" },
+    publisher: { "@type": "Organization", name: "UPI MDR Calculator", url: SITE + "/" },
+    citation: OFFICIAL_FAQ_URL,
+  },
+  faqSchema(faqs),
+  breadcrumbSchema([
+    { name: "UPI MDR Calculator", url: SITE + "/" },
+    { name: "Is UPI Free?", url: SITE + path },
+  ]),
+];
+---
+
+<Base title={title} description={description} path={path} schemas={schemas} ogType="article">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Calculator</a> › Is UPI Free?</nav>
+  <article class="prose">
+    <h1>Is UPI Still Free After 15 October 2026?</h1>
+    <p class="updated">Last updated {LAST_UPDATED} · Based on the <a href={OFFICIAL_FAQ_URL} rel="noopener">official government FAQ</a></p>
+
+    <div class="answer">
+      <p><strong>Yes. UPI stays completely free for customers.</strong></p>
+      <p>You won't pay anything extra to pay a shop, scan a QR code or send money to friends and family. The new charge starting 15 October 2026 is paid by <strong>merchants</strong>, and only on payments above ₹2,000.</p>
+    </div>
+
+    <h2>What's free for you as a customer</h2>
+    <ul>
+      <li><strong>Paying any shop or business</strong> by UPI, at any amount.</li>
+      <li><strong>Scanning QR codes</strong>: no charge.</li>
+      <li><strong>Sending money to friends and family</strong> (P2P): free at any amount.</li>
+      <li><strong>AutoPay</strong> for subscriptions, bills and SIPs: no MDR.</li>
+      <li><strong>No monthly limit</strong> on free UPI payments.</li>
+      <li><strong>No app fees:</strong> UPI apps are not allowed to charge users a platform fee.</li>
+    </ul>
+
+    <h2>So who pays the new UPI charge?</h2>
+    <p>
+      Merchants. When a customer pays a business more than ₹2,000 by UPI, the merchant's bank deducts a small fee called MDR (Merchant Discount Rate), 0.4% capped at ₹300, from what the merchant receives. The customer pays the normal price. Small shops receiving up to ₹1 lakh a month through UPI QR don't pay it at all.
+    </p>
+    <p>If you're a merchant, see exactly how much you'll receive with the <a href="/">UPI MDR calculator</a> or read the <a href="/upi-mdr-rules-2026/">full rules on UPI charges above ₹2,000</a>.</p>
+
+    <h2>Can a shop charge you extra for UPI?</h2>
+    <p>
+      No. Merchants are not allowed to pass the MDR on to customers. If a shop asks for extra money because you're paying by UPI, that's against the rules. You can pay the listed price, and raise it with the shop's bank or payment app if needed.
+    </p>
+
+    <h2 lang="hi-Latn">Kya UPI par charge lagega? (Hinglish mein)</h2>
+    <div lang="hi-Latn">
+      <p><strong>Nahi, customer ke liye UPI free rahega.</strong> 15 October 2026 se naya charge sirf <strong>merchant</strong> (dukaandar) ko dena hoga, woh bhi sirf ₹2,000 se upar ke payment par.</p>
+      <ul>
+        <li>Dukaan par UPI payment: <strong>customer ke liye free</strong></li>
+        <li>Dost ya family ko paise bhejna: <strong>free</strong>, kitni bhi amount ho</li>
+        <li>₹2,000 tak ka merchant payment: <strong>koi charge nahi</strong></li>
+        <li>₹2,000 se upar: merchant ko <strong>0.4%</strong> (maximum ₹300)</li>
+        <li>Chhote dukaandar (UPI QR se mahine mein ₹1 lakh tak): <strong>koi charge nahi</strong></li>
+      </ul>
+    </div>
+
+    <h2 lang="hi">क्या यूपीआई पर चार्ज लगेगा?</h2>
+    <p lang="hi">
+      <strong>नहीं, ग्राहकों के लिए यूपीआई मुफ़्त रहेगा।</strong> 15 अक्टूबर 2026 से नया शुल्क (MDR) सिर्फ़ दुकानदार को ₹2,000 से ज़्यादा के पेमेंट पर देना होगा। दोस्तों या परिवार को पैसे भेजना और QR स्कैन करना पूरी तरह मुफ़्त है। पूरी जानकारी <a href="/hi/">हिंदी में यहाँ</a> पढ़ें।
+    </p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      {faqs.map((f) => (
+        <details><summary>{f.q}</summary><p>{f.a}</p></details>
+      ))}
+    </div>
+  </article>
+</Base>
+
+<style>
+  .answer {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--green);
+    border-radius: 8px;
+    padding: 4px 16px;
+    margin: 16px 0;
+  }
+</style>

@@ -9,7 +9,8 @@ const T = {
     amount: "UPI payment amount (₹)",
     type: "Merchant type",
     standard: "Standard merchant (0.4%, max ₹300)",
-    essential: "Essential sector – railways, telecom, insurance, fuel, agri inputs (flat ₹5)",
+    essential: "Concessional sector – railways, telecom, insurance, fuel, utility bills, education (flat ₹5)",
+    capital: "Mutual funds / stock brokers (0.02%, max ₹300)",
     custom: "Custom MDR rate",
     customRate: "Custom MDR rate (%)",
     customHint: "Use this if your bank or payment provider quotes a different rate.",
@@ -23,7 +24,8 @@ const T = {
     net: "Merchant receives",
     rUnder: "No MDR: payments of ₹2,000 or less are exempt.",
     rSmall: "No MDR: small merchants with UPI QR receipts under ₹1 lakh a month are exempt.",
-    rEssential: "Flat ₹5 MDR applies for essential sectors on payments above ₹2,000.",
+    rEssential: "Flat ₹5 MDR applies for concessional sectors on payments above ₹2,000.",
+    rCapital: "0.02% MDR applies to capital market payments above ₹2,000 (max ₹300).",
     rCustom: "Custom rate of {rate}% applied (no cap).",
     rCap: "MDR is capped at ₹300 (reached at ₹75,000).",
     rStd: "0.4% MDR applies because the payment is above ₹2,000.",
@@ -34,7 +36,8 @@ const T = {
     amount: "UPI पेमेंट राशि (₹)",
     type: "मर्चेंट का प्रकार",
     standard: "सामान्य मर्चेंट (0.4%, अधिकतम ₹300)",
-    essential: "आवश्यक सेक्टर – रेलवे, टेलीकॉम, बीमा, ईंधन, कृषि इनपुट (फ्लैट ₹5)",
+    essential: "रियायती सेक्टर – रेलवे, टेलीकॉम, बीमा, ईंधन, बिजली-पानी-गैस बिल, शिक्षा (फ्लैट ₹5)",
+    capital: "म्यूचुअल फंड / स्टॉक ब्रोकर (0.02%, अधिकतम ₹300)",
     custom: "अपनी MDR दर डालें",
     customRate: "अपनी MDR दर (%)",
     customHint: "अगर आपका बैंक या पेमेंट प्रोवाइडर अलग दर बताता है तो इसका इस्तेमाल करें।",
@@ -48,7 +51,8 @@ const T = {
     net: "मर्चेंट को मिलेगा",
     rUnder: "कोई MDR नहीं: ₹2,000 या उससे कम के पेमेंट पर छूट है।",
     rSmall: "कोई MDR नहीं: महीने में ₹1 लाख से कम UPI QR पेमेंट पाने वाले छोटे मर्चेंट को छूट है।",
-    rEssential: "₹2,000 से ऊपर के पेमेंट पर आवश्यक सेक्टर के लिए फ्लैट ₹5 MDR लगेगा।",
+    rEssential: "₹2,000 से ऊपर के पेमेंट पर रियायती सेक्टर के लिए फ्लैट ₹5 MDR लगेगा।",
+    rCapital: "₹2,000 से ऊपर के कैपिटल मार्केट पेमेंट पर 0.02% MDR लगेगा (अधिकतम ₹300)।",
     rCustom: "{rate}% की आपकी दर लगाई गई (कोई सीमा नहीं)।",
     rCap: "MDR की अधिकतम सीमा ₹300 है (₹75,000 पर पहुँचती है)।",
     rStd: "पेमेंट ₹2,000 से ज़्यादा है, इसलिए 0.4% MDR लगेगा।",
@@ -68,6 +72,7 @@ const T = {
     <select id="category">
       <option value="standard" selected>{T.standard}</option>
       <option value="essential">{T.essential}</option>
+      <option value="capital">{T.capital}</option>
       <option value="custom">{T.custom}</option>
     </select>
   </div>
@@ -101,7 +106,7 @@ const T = {
 </section>
 
 <script>
-  import { MDR_RATE, MDR_CAP, THRESHOLD, GST_RATE, ESSENTIAL_FLAT } from "../lib/mdr";
+  import { MDR_RATE, MDR_CAP, THRESHOLD, GST_RATE, ESSENTIAL_FLAT, CAPITAL_RATE } from "../lib/mdr";
 
   const root = document.querySelector<HTMLElement>("[data-mdr-calc]");
   if (root) {
@@ -141,6 +146,9 @@ const T = {
       } else if (category === "essential") {
         mdr = Math.min(ESSENTIAL_FLAT, amount);
         reason = t.rEssential;
+      } else if (category === "capital") {
+        mdr = Math.min(amount * CAPITAL_RATE, MDR_CAP);
+        reason = t.rCapital;
       } else if (category === "custom") {
         const rate = num(customRateInput) / 100;
         mdr = Math.min(amount * rate, amount);

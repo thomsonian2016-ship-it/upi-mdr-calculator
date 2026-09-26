@@ -1,21 +1,24 @@
 ---
 import Base from "../layouts/Base.astro";
 import Calculator from "../components/Calculator.astro";
-import { SITE, LAST_UPDATED, LAST_UPDATED_ISO, calc, inr, inr0, faqSchema, type Faq } from "../lib/mdr";
+import { SITE, LAST_UPDATED, LAST_UPDATED_ISO, OFFICIAL_FAQ_URL, calc, inr, inr0, faqSchema, type Faq } from "../lib/mdr";
 
-const title = "UPI MDR Calculator 2026 – MDR Charges, GST & Net Settlement";
-const description = "Free UPI MDR calculator for the rules from 15 Oct 2026. Enter any UPI payment to see the 0.4% MDR, 18% GST and how much the merchant actually receives.";
+const title = "UPI MDR Calculator 2026 – UPI Charges Above ₹2,000 & GST";
+const description = "Free UPI charges calculator for the new rules from 15 Oct 2026. Enter any UPI payment to see the 0.4% MDR, GST and how much the merchant actually receives.";
 
 const examples = [1500, 2000, 3000, 5000, 10000, 25000, 50000, 75000, 100000].map(calc);
 
 const faqs: Faq[] = [
   { q: "When do the new UPI MDR charges start?", a: "The new MDR framework applies from 15 October 2026. It was announced by NPCI on 15 September 2026." },
-  { q: "Is UPI still free for customers?", a: "Yes. MDR is a merchant-side fee. Customers paying by UPI are not charged anything extra, and person-to-person (P2P) transfers remain free." },
+  { q: "Is UPI still free for customers?", a: "Yes. MDR is a merchant-side fee. Customers paying by UPI are not charged anything extra, person-to-person (P2P) transfers remain free, and UPI apps cannot charge users a platform fee." },
   { q: "Which UPI payments attract MDR?", a: "Person-to-merchant (P2M) UPI payments above ₹2,000 attract 0.4% MDR. Payments of ₹2,000 or less have zero MDR." },
   { q: "What is the maximum UPI MDR on one payment?", a: "MDR is capped at ₹300 per transaction, which is reached at ₹75,000. With 18% GST on the MDR, the maximum total deduction is ₹354." },
-  { q: "Are small merchants exempt from UPI MDR?", a: "Yes. Small merchants receiving up to ₹1 lakh a month through UPI QR codes continue to pay zero MDR, even on payments above ₹2,000." },
-  { q: "Which sectors pay a flat ₹5 MDR?", a: "Reported essential sectors — railways, telecom, insurance, fuel and agricultural inputs — pay a flat ₹5 MDR on payments above ₹2,000 instead of 0.4%." },
-  { q: "Is GST charged on UPI MDR?", a: "Yes, 18% GST applies to the MDR fee, not to the payment amount. On a ₹5,000 payment, MDR is ₹20 and GST is ₹3.60. GST-registered merchants can usually claim this as input tax credit. The GST rate on MDR may be reviewed by the GST Council." },
+  { q: "Are small merchants exempt from UPI MDR?", a: "Yes. Small merchants receiving up to ₹1 lakh a month through UPI QR codes pay zero MDR, even on payments above ₹2,000, and don't need GST registration to qualify. A merchant moves to the regular category only after crossing ₹1 lakh a month for 3 months in a row." },
+  { q: "Which sectors pay a flat ₹5 MDR?", a: "Railways, telecom, insurance, fuel, public utility bills (electricity, water, piped gas) and educational institutions pay a flat ₹5 MDR on payments above ₹2,000 instead of 0.4%." },
+  { q: "What is the UPI MDR for mutual funds and stock brokers?", a: "Capital market payments, such as mutual fund purchases and payments to brokers, carry 0.02% MDR with a ₹300 cap." },
+  { q: "Is UPI AutoPay charged MDR?", a: "No. UPI Mandates or AutoPay, used for subscriptions, bills and SIPs, do not carry prescribed MDR charges." },
+  { q: "Is GST charged on UPI MDR?", a: "MDR is a bank service fee, which normally attracts 18% GST on the fee amount, not on the payment. On a ₹5,000 payment, MDR is ₹20 and GST is ₹3.60. GST-registered merchants can usually claim this as input tax credit. The official FAQ does not address GST, so the calculator lets you switch it off." },
+  { q: "Does the 0.4% UPI MDR apply to RuPay credit cards on UPI?", a: "No. RuPay credit cards on UPI follow standard credit card MDR rules, which are usually higher and set by each bank." },
   { q: "Can a merchant charge customers extra to cover MDR?", a: "No. Banks and payment providers have been directed to ensure merchants do not pass MDR on to customers. The MDR is deducted from the merchant's settlement." },
 ];
 
@@ -46,12 +49,13 @@ const schemas = [
 <Base title={title} description={description} path="/" lang="en" alternates={{ en: "/", hi: "/hi/" }} schemas={schemas}>
   <header class="page-head">
     <h1>UPI MDR Calculator</h1>
+    <p class="sub">Calculate UPI charges on payments above ₹2,000</p>
     <p class="lead">See the MDR, GST and net amount a merchant receives on any UPI payment under the new rules from <strong>15 October 2026</strong>.</p>
   </header>
 
   <Calculator lang="en" />
 
-  <p class="updated center">Last updated {LAST_UPDATED}. Based on the NPCI MDR framework announced on 15 September 2026. Check your exact charges with your bank or payment provider.</p>
+  <p class="updated center">Last updated {LAST_UPDATED}. Based on the NPCI MDR framework and the <a href={OFFICIAL_FAQ_URL} rel="noopener">official government FAQ</a>. Check your exact charges with your bank or payment provider.</p>
 
   <article class="prose">
     <h2>How UPI MDR works from 15 October 2026</h2>
@@ -63,12 +67,15 @@ const schemas = [
     <ul>
       <li><strong>₹2,000 or less:</strong> zero MDR.</li>
       <li><strong>Above ₹2,000:</strong> 0.4% MDR, capped at ₹300 per payment (the cap is reached at ₹75,000).</li>
-      <li><strong>Essential sectors</strong> (railways, telecom, insurance, fuel, agricultural inputs): flat ₹5 MDR above ₹2,000.</li>
+      <li><strong>Concessional sectors</strong> (railways, telecom, insurance, fuel, utility bills, educational institutions): flat ₹5 MDR above ₹2,000.</li>
+      <li><strong>Mutual funds and stock brokers:</strong> 0.02% MDR, max ₹300.</li>
+      <li><strong>UPI AutoPay:</strong> no prescribed MDR.</li>
       <li><strong>Small merchants</strong> receiving up to ₹1 lakh a month via UPI QR: zero MDR.</li>
-      <li><strong>Person-to-person transfers:</strong> always free.</li>
+      <li><strong>Person-to-person transfers:</strong> always free. <a href="/is-upi-free/">Is UPI free for customers?</a></li>
       <li><strong>GST:</strong> 18% on the MDR fee only, not on the payment amount.</li>
+      <li><strong>RuPay credit card on UPI:</strong> different, higher card rates. See <a href="/rupay-credit-card-upi-charges/">RuPay credit card UPI charges</a>.</li>
     </ul>
-    <p>Read the full breakdown in our <a href="/upi-mdr-rules-2026/">UPI MDR rules 2026 guide</a>.</p>
+    <p>Read the full breakdown of <a href="/upi-mdr-rules-2026/">UPI charges above ₹2,000</a>, checked against the <a href={OFFICIAL_FAQ_URL} rel="noopener">official government FAQ</a>.</p>
 
     <h3>How the calculation works</h3>
     <p>
@@ -102,4 +109,5 @@ const schemas = [
 <style>
   .page-head { text-align: center; margin-bottom: 20px; }
   .center { text-align: center; margin-top: 14px; }
+  .sub { margin: 0 0 6px; font-weight: 600; color: var(--muted); }
 </style>

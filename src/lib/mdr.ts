@@ -7,7 +7,12 @@ export const MDR_RATE = 0.004; // 0.4%
 export const MDR_CAP = 300; // ₹300 max per payment
 export const THRESHOLD = 2000; // payments above ₹2,000
 export const GST_RATE = 0.18; // 18% GST on MDR
-export const ESSENTIAL_FLAT = 5; // flat ₹5 for essential sectors
+export const ESSENTIAL_FLAT = 5; // flat ₹5 for concessional sectors
+export const CAPITAL_RATE = 0.0002; // 0.02% for capital market payments (same ₹300 cap)
+
+// Official source: Department of Financial Services FAQ on MDR for UPI (P2M), September 2026
+export const OFFICIAL_FAQ_URL =
+  "https://financialservices.gov.in/sites/default/files/2026-09/FAQs---Merchant-Discount-Rate--MDR--on-Select-UPI--P2M--Transactions_0.pdf";
 
 export function calc(amount: number) {
   const mdr = amount > THRESHOLD ? Math.min(amount * MDR_RATE, MDR_CAP) : 0;

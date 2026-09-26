@@ -1,0 +1,116 @@
+---
+import Base from "../layouts/Base.astro";
+import { SITE, LAST_UPDATED, LAST_UPDATED_ISO, OFFICIAL_FAQ_URL, GST_RATE, inr, faqSchema, breadcrumbSchema, type Faq } from "../lib/mdr";
+
+const title = "RuPay Credit Card UPI Charges Above ₹2,000 for Merchants (2026)";
+const description = "RuPay credit card payments on UPI follow credit card MDR rules, not the 0.4% UPI rule. See merchant rates by category, GST, examples and who pays.";
+const path = "/rupay-credit-card-upi-charges/";
+
+const CANARA_URL = "https://www.canarabank.bank.in/documents/d/guest/mdr-on-rupay-credit-card-on-upi-payments1";
+
+// Canara Bank's published indicative MDR for RuPay credit card on UPI (above ₹2,000), effective 1 June 2026
+const rates = [
+  { cat: "Public sector insurance companies", rate: 0.005 },
+  { cat: "Agriculture, railways, transit, transport, telecom, insurance, education, government, post office", rate: 0.007 },
+  { cat: "Fuel", rate: 0.0075 },
+  { cat: "Supermarkets, convenience stores, contractor services", rate: 0.011 },
+  { cat: "All other categories", rate: 0.0175 },
+];
+const exAmount = 5000;
+const pct = (r: number) => (r * 100).toFixed(2).replace(/\.?0+$/, "") + "%";
+
+const faqs: Faq[] = [
+  { q: "Does the customer pay extra for RuPay credit card payments on UPI?", a: "No. The charge is paid by the merchant and deducted from the settlement. The customer pays the normal price." },
+  { q: "Does the new 0.4% UPI MDR apply to RuPay credit cards?", a: "No. According to the official government FAQ, RuPay credit cards linked to UPI follow standard credit card guidelines, not the UPI MDR framework that starts on 15 October 2026." },
+  { q: "Is there a charge on RuPay credit card UPI payments below ₹2,000?", a: "The published bank schedules we've seen, such as Canara Bank's, apply MDR on RuPay credit card UPI payments only above ₹2,000. Confirm your bank's schedule, as rates and rules can differ." },
+  { q: "How much is the charge on a ₹5,000 RuPay credit card UPI payment?", a: "At Canara Bank's default 1.75% rate, MDR is ₹87.50 plus ₹15.75 GST, a total of ₹103.25. The merchant receives ₹4,896.75. Rates differ by bank and merchant category." },
+];
+
+const schemas = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description,
+    inLanguage: "en-IN",
+    datePublished: LAST_UPDATED_ISO,
+    dateModified: LAST_UPDATED_ISO,
+    mainEntityOfPage: SITE + path,
+    image: SITE + "/og-image.png",
+    author: { "@type": "Organization", name: "UPI MDR Calculator", url: SITE + "/" },
+    publisher: { "@type": "Organization", name: "UPI MDR Calculator", url: SITE + "/" },
+    citation: [OFFICIAL_FAQ_URL, CANARA_URL],
+  },
+  faqSchema(faqs),
+  breadcrumbSchema([
+    { name: "UPI MDR Calculator", url: SITE + "/" },
+    { name: "RuPay Credit Card UPI Charges", url: SITE + path },
+  ]),
+];
+---
+
+<Base title={title} description={description} path={path} schemas={schemas} ogType="article">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Calculator</a> › RuPay Credit Card UPI Charges</nav>
+  <article class="prose">
+    <h1>RuPay Credit Card UPI Charges Above ₹2,000</h1>
+    <p class="updated">Last updated {LAST_UPDATED}</p>
+    <p class="lead">
+      When a customer pays with a RuPay credit card through UPI, the merchant pays a card-style MDR, which is usually much higher than the new 0.4% UPI rate. The customer pays nothing extra.
+    </p>
+
+    <h2>Different rules from regular UPI</h2>
+    <p>
+      The new UPI MDR starting 15 October 2026 (0.4%, capped at ₹300) applies to payments from bank accounts. The <a href={OFFICIAL_FAQ_URL} rel="noopener">official government FAQ</a> says RuPay credit cards linked to UPI <strong>follow standard credit card guidelines</strong> instead. That means each bank sets its MDR by merchant category, with no ₹300 cap.
+    </p>
+
+    <h2>Example rates: Canara Bank</h2>
+    <p>
+      Canara Bank has <a href={CANARA_URL} rel="noopener">published indicative MDR rates</a> for RuPay credit card payments on UPI above ₹2,000, effective 1 June 2026. Other banks and payment apps use similar category-based rates, but the exact numbers vary. The example column shows the total deduction on a ₹5,000 payment, including 18% GST.
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Merchant category</th><th>MDR</th><th>On ₹5,000 (incl. GST)</th></tr></thead>
+        <tbody>
+          {rates.map((r) => (
+            <tr>
+              <td class="wrap">{r.cat}</td>
+              <td>{pct(r.rate)}</td>
+              <td>{inr(exAmount * r.rate * (1 + GST_RATE))}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="updated">18% GST applies on top of the MDR. Source: Canara Bank. Your bank's rates may differ, and banks can revise them.</p>
+
+    <h2>Calculate your RuPay credit card charges</h2>
+    <p>
+      Open the <a href="/">UPI MDR calculator</a>, choose <strong>Custom MDR rate</strong> as the merchant type, and enter your bank's rate (for example 1.75). You'll see the MDR, GST and what you'll actually receive.
+    </p>
+
+    <h2>Who pays?</h2>
+    <p>
+      The merchant. The MDR is deducted from the settlement. Customers paying with a RuPay credit card on UPI don't pay an extra fee to the shop.
+    </p>
+
+    <h2>How to find your exact rate</h2>
+    <ul>
+      <li>Check the MDR or fee page of your <strong>bank</strong> or <strong>payment app</strong> (PhonePe Business, Paytm for Business, Google Pay for Business, and so on).</li>
+      <li>Look at your <strong>settlement report</strong>: fees on credit card UPI payments are sometimes labelled "MDR recovery".</li>
+      <li>Ask your bank which <strong>merchant category (MCC)</strong> your business is registered under, since the rate depends on it.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      {faqs.map((f) => (
+        <details><summary>{f.q}</summary><p>{f.a}</p></details>
+      ))}
+    </div>
+
+    <p>Related: <a href="/upi-mdr-rules-2026/">UPI charges above ₹2,000 (bank account payments)</a> · <a href="/is-upi-free/">Is UPI free for customers?</a></p>
+  </article>
+</Base>
+
+<style>
+  td.wrap { white-space: normal; min-width: 180px; }
+</style>
