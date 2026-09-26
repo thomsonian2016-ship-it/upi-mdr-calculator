@@ -1,0 +1,101 @@
+---
+import Base from "../../layouts/Base.astro";
+import Calculator from "../../components/Calculator.astro";
+import { SITE, LAST_UPDATED_ISO, calc, inr, inr0, faqSchema, breadcrumbSchema, type Faq } from "../../lib/mdr";
+
+const title = "UPI MDR कैलकुलेटर 2026 – UPI चार्ज, GST और मर्चेंट को कितना मिलेगा";
+const description = "15 अक्टूबर 2026 से नए UPI MDR नियम। पेमेंट राशि डालें और तुरंत देखें 0.4% MDR, MDR पर 18% GST और मर्चेंट को असल में कितना पैसा मिलेगा। मुफ़्त कैलकुलेटर।";
+
+const examples = [1500, 2000, 3000, 5000, 10000, 25000, 50000, 75000, 100000].map(calc);
+
+const faqs: Faq[] = [
+  { q: "UPI पर नया MDR चार्ज कब से लागू होगा?", a: "नया MDR नियम 15 अक्टूबर 2026 से लागू होगा। NPCI ने इसकी घोषणा 15 सितंबर 2026 को की थी।" },
+  { q: "क्या ग्राहकों के लिए UPI अब भी मुफ़्त है?", a: "हाँ। MDR मर्चेंट से लिया जाने वाला शुल्क है। UPI से पेमेंट करने वाले ग्राहक को कुछ भी अतिरिक्त नहीं देना होगा, और व्यक्ति से व्यक्ति (P2P) ट्रांसफर मुफ़्त रहेंगे।" },
+  { q: "किन UPI पेमेंट पर MDR लगेगा?", a: "₹2,000 से ज़्यादा के मर्चेंट (P2M) UPI पेमेंट पर 0.4% MDR लगेगा। ₹2,000 या उससे कम के पेमेंट पर कोई MDR नहीं है।" },
+  { q: "एक पेमेंट पर अधिकतम कितना MDR लग सकता है?", a: "एक पेमेंट पर MDR की अधिकतम सीमा ₹300 है, जो ₹75,000 के पेमेंट पर पहुँचती है। 18% GST मिलाकर अधिकतम कुल कटौती ₹354 है।" },
+  { q: "क्या छोटे दुकानदारों को MDR से छूट है?", a: "हाँ। जिन छोटे मर्चेंट को UPI QR कोड से महीने में ₹1 लाख तक का पेमेंट मिलता है, उन्हें ₹2,000 से ऊपर के पेमेंट पर भी कोई MDR नहीं देना होगा।" },
+  { q: "किन सेक्टर पर फ्लैट ₹5 MDR लगेगा?", a: "रिपोर्ट के अनुसार रेलवे, टेलीकॉम, बीमा, ईंधन और कृषि इनपुट जैसे आवश्यक सेक्टर में ₹2,000 से ऊपर के पेमेंट पर 0.4% की जगह फ्लैट ₹5 MDR लगेगा।" },
+  { q: "क्या UPI MDR पर GST लगता है?", a: "हाँ, MDR शुल्क पर 18% GST लगता है, पूरी पेमेंट राशि पर नहीं। ₹5,000 के पेमेंट पर MDR ₹20 और GST ₹3.60 होगा। GST रजिस्टर्ड मर्चेंट आमतौर पर इसे इनपुट टैक्स क्रेडिट के रूप में क्लेम कर सकते हैं। GST काउंसिल MDR पर GST की दर की समीक्षा कर सकती है।" },
+  { q: "क्या दुकानदार MDR का पैसा ग्राहक से ले सकता है?", a: "नहीं। बैंकों और पेमेंट प्रोवाइडर को निर्देश दिया गया है कि मर्चेंट MDR ग्राहक पर न डालें। MDR मर्चेंट के सेटलमेंट से काटा जाता है।" },
+];
+
+const schemas = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "UPI MDR कैलकुलेटर",
+    url: SITE + "/hi/",
+    description,
+    applicationCategory: "FinanceApplication",
+    operatingSystem: "All",
+    inLanguage: "hi-IN",
+    dateModified: LAST_UPDATED_ISO,
+    offers: { "@type": "Offer", price: "0", priceCurrency: "INR" },
+  },
+  faqSchema(faqs),
+  breadcrumbSchema([
+    { name: "UPI MDR Calculator", url: SITE + "/" },
+    { name: "हिंदी", url: SITE + "/hi/" },
+  ]),
+];
+---
+
+<Base title={title} description={description} path="/hi/" lang="hi" alternates={{ en: "/", hi: "/hi/" }} schemas={schemas}>
+  <header class="page-head">
+    <h1>UPI MDR कैलकुलेटर</h1>
+    <p class="lead"><strong>15 अक्टूबर 2026</strong> से लागू नए नियमों के अनुसार देखें कि किसी भी UPI पेमेंट पर कितना MDR, कितना GST कटेगा और मर्चेंट को कितना पैसा मिलेगा।</p>
+  </header>
+
+  <Calculator lang="hi" />
+
+  <p class="updated center">अंतिम अपडेट: 26 सितंबर 2026। यह 15 सितंबर 2026 को घोषित NPCI के MDR नियमों पर आधारित है। अपने सटीक शुल्क के लिए अपने बैंक या पेमेंट प्रोवाइडर से पुष्टि करें।</p>
+
+  <article class="prose">
+    <h2>15 अक्टूबर 2026 से UPI MDR कैसे काम करेगा</h2>
+    <p>
+      MDR (मर्चेंट डिस्काउंट रेट) वह शुल्क है जो दुकानदार या व्यापारी डिजिटल पेमेंट स्वीकार करने पर देता है। कई सालों से UPI पर कोई MDR नहीं था। <strong>15 अक्टूबर 2026</strong> से NPCI के नए नियम में बड़े मर्चेंट पेमेंट पर थोड़ा MDR जोड़ा गया है। ग्राहक पहले जितना ही पैसा देगा; शुल्क मर्चेंट को मिलने वाली राशि से कटेगा।
+    </p>
+
+    <h3>नियम एक नज़र में</h3>
+    <ul>
+      <li><strong>₹2,000 या कम:</strong> कोई MDR नहीं।</li>
+      <li><strong>₹2,000 से ज़्यादा:</strong> 0.4% MDR, एक पेमेंट पर अधिकतम ₹300 (₹75,000 पर सीमा पूरी)।</li>
+      <li><strong>आवश्यक सेक्टर</strong> (रेलवे, टेलीकॉम, बीमा, ईंधन, कृषि इनपुट): ₹2,000 से ऊपर फ्लैट ₹5 MDR।</li>
+      <li><strong>छोटे मर्चेंट</strong> जिन्हें UPI QR से महीने में ₹1 लाख तक मिलता है: कोई MDR नहीं।</li>
+      <li><strong>व्यक्ति से व्यक्ति ट्रांसफर (P2P):</strong> हमेशा मुफ़्त।</li>
+      <li><strong>GST:</strong> 18%, सिर्फ़ MDR शुल्क पर, पूरी राशि पर नहीं।</li>
+    </ul>
+
+    <h3>हिसाब कैसे लगाएं</h3>
+    <p>
+      MDR = पेमेंट × 0.4% (अधिकतम ₹300)। GST = MDR × 18%। मर्चेंट को मिलेगा = पेमेंट − MDR − GST।
+      उदाहरण: ₹10,000 के पेमेंट पर MDR ₹40, GST ₹7.20, और मर्चेंट को ₹9,952.80 मिलेंगे।
+    </p>
+
+    <h3>सामान्य मर्चेंट के लिए UPI MDR उदाहरण</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>पेमेंट</th><th>MDR</th><th>GST (18%)</th><th>मर्चेंट को मिलेगा</th></tr></thead>
+        <tbody>
+          {examples.map((e) => (
+            <tr><td>{inr0(e.amount)}</td><td>{inr(e.mdr)}</td><td>{inr(e.gst)}</td><td>{inr(e.net)}</td></tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p>₹2,000 से ₹1 लाख तक हर राशि के लिए पूरा <a href="/upi-mdr-chart/">UPI MDR चार्ट</a> देखें (अंग्रेज़ी में)।</p>
+    <p lang="en">This calculator is also available <a href="/">in English</a>.</p>
+
+    <h2>अक्सर पूछे जाने वाले सवाल</h2>
+    <div class="faq">
+      {faqs.map((f) => (
+        <details><summary>{f.q}</summary><p>{f.a}</p></details>
+      ))}
+    </div>
+  </article>
+</Base>
+
+<style>
+  .page-head { text-align: center; margin-bottom: 20px; }
+  .center { text-align: center; margin-top: 14px; }
+</style>

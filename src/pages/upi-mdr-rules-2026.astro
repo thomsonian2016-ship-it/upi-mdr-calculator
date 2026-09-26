@@ -1,0 +1,125 @@
+---
+import Base from "../layouts/Base.astro";
+import { SITE, LAST_UPDATED, LAST_UPDATED_ISO, faqSchema, breadcrumbSchema, type Faq } from "../lib/mdr";
+
+const title = "UPI MDR Rules 2026: 0.4% Charge Above ₹2,000 Explained";
+const description = "New UPI MDR from 15 Oct 2026 explained: who pays, the ₹2,000 threshold, ₹300 cap, small-merchant exemption, ₹5 sectors, 18% GST and what to do now.";
+const path = "/upi-mdr-rules-2026/";
+
+const faqs: Faq[] = [
+  { q: "Will UPI payments cost customers money from 15 October 2026?", a: "No. The MDR is paid by the merchant, not the customer. Merchants have been told not to pass it on, and UPI apps cannot add a new user fee because of this framework." },
+  { q: "Does UPI MDR apply to sending money to friends and family?", a: "No. Person-to-person (P2P) UPI transfers remain free at any amount." },
+  { q: "I run a small shop. Will I pay UPI MDR?", a: "If your UPI QR receipts are up to ₹1 lakh a month, you remain exempt. Above that, only individual payments above ₹2,000 attract MDR." },
+  { q: "Is the ₹2,000 threshold per payment or per day?", a: "Per payment. A ₹1,800 payment has zero MDR even if you receive many of them in a day." },
+  { q: "Can I claim GST paid on UPI MDR as input tax credit?", a: "GST-registered merchants can generally claim GST on MDR as input tax credit. Businesses dealing only in exempt goods or services usually cannot. Check with your accountant." },
+];
+
+const schemas = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description,
+    inLanguage: "en-IN",
+    datePublished: LAST_UPDATED_ISO,
+    dateModified: LAST_UPDATED_ISO,
+    mainEntityOfPage: SITE + path,
+    image: SITE + "/og-image.png",
+    author: { "@type": "Organization", name: "UPI MDR Calculator", url: SITE + "/" },
+    publisher: { "@type": "Organization", name: "UPI MDR Calculator", url: SITE + "/" },
+  },
+  faqSchema(faqs),
+  breadcrumbSchema([
+    { name: "UPI MDR Calculator", url: SITE + "/" },
+    { name: "UPI MDR Rules 2026", url: SITE + path },
+  ]),
+];
+---
+
+<Base title={title} description={description} path={path} schemas={schemas} ogType="article">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Calculator</a> › UPI MDR Rules 2026</nav>
+  <article class="prose">
+    <h1>UPI MDR Rules 2026, Explained Simply</h1>
+    <p class="updated">Last updated {LAST_UPDATED}</p>
+    <p class="lead">From <strong>15 October 2026</strong>, larger UPI payments to merchants carry a small fee called MDR. Here's exactly who pays, how much, and who is exempt.</p>
+
+    <p><a class="cta" href="/">Calculate your UPI MDR →</a></p>
+
+    <h2>What changed and when</h2>
+    <p>
+      For years UPI ran on a zero-MDR model, meaning neither customers nor merchants paid to use it. The Ministry of Finance issued a Gazette notification on 14 September 2026, and NPCI followed with a circular to banks and payment companies on 15 September 2026. The new MDR framework takes effect on <strong>15 October 2026</strong>, giving banks and payment providers a month to update their systems.
+    </p>
+
+    <h2>The new UPI MDR rates</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Type of payment</th><th>MDR</th></tr></thead>
+        <tbody>
+          <tr><td>Merchant payment of ₹2,000 or less</td><td>Zero</td></tr>
+          <tr><td>Merchant payment above ₹2,000</td><td>0.4%, max ₹300</td></tr>
+          <tr><td>Essential sectors, above ₹2,000</td><td>Flat ₹5</td></tr>
+          <tr><td>Small merchant (≤ ₹1 lakh/month via UPI QR)</td><td>Zero</td></tr>
+          <tr><td>Person-to-person transfer</td><td>Zero</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>18% GST applies on the MDR amount itself. See every amount in the <a href="/upi-mdr-chart/">UPI MDR chart</a>.</p>
+
+    <h2>Who pays: merchant, not customer</h2>
+    <p>
+      MDR is a merchant-side fee. It is deducted from the money the merchant receives, so the customer pays the same price as before. Banks and payment providers have been directed to make sure merchants do not add MDR to the customer's bill. Surcharging customers for paying by UPI is not allowed under this framework.
+    </p>
+
+    <h2>The ₹2,000 threshold</h2>
+    <p>
+      MDR applies only when a single payment is <strong>more than ₹2,000</strong>. NPCI has said more than 96% of UPI merchant payments are ₹2,000 or less, so most everyday purchases like groceries, tea or auto fares are unaffected.
+    </p>
+
+    <h2>The ₹300 cap</h2>
+    <p>
+      MDR is 0.4% of the payment, but never more than <strong>₹300</strong> per payment. The cap is reached at ₹75,000. So a ₹75,000 and a ₹2,00,000 payment both carry ₹300 MDR, plus ₹54 GST, for a maximum deduction of ₹354.
+    </p>
+
+    <h2>Small merchant exemption</h2>
+    <p>
+      Small merchants who receive up to <strong>₹1 lakh a month</strong> through UPI QR codes stay at zero MDR, even for individual payments above ₹2,000. If you're a small shop owner below this level, nothing changes for you.
+    </p>
+
+    <h2>Essential sectors: flat ₹5</h2>
+    <p>
+      Reported essential sectors, namely railways, telecom, insurance, fuel and agricultural inputs, pay a flat <strong>₹5 MDR</strong> on payments above ₹2,000 instead of 0.4%. That keeps large payments like insurance premiums or fertiliser purchases cheap to accept.
+    </p>
+
+    <h2>GST on UPI MDR</h2>
+    <p>
+      18% GST is charged on the MDR fee, not on the payment amount. On a ₹10,000 payment, MDR is ₹40 and GST is ₹7.20. GST-registered merchants can generally claim this GST as input tax credit, which reduces the real cost. The GST rate on MDR has been reported as a possible topic for GST Council review, so it could change.
+    </p>
+
+    <h2>How UPI compares with cards</h2>
+    <p>
+      Even after this change, UPI stays much cheaper to accept than cards. Credit card MDR typically ranges from 1.5% to 2.5%, and debit card MDR can be up to 0.9%. UPI's 0.4%, capped at ₹300, is lower than both.
+    </p>
+
+    <h2>What merchants should do now</h2>
+    <ul>
+      <li><strong>Check your monthly UPI QR total.</strong> If it's under ₹1 lakh, you're exempt.</li>
+      <li><strong>Expect settlements to be slightly lower</strong> on payments above ₹2,000 from 15 October. Tell your accountant so reconciliation doesn't flag the difference.</li>
+      <li><strong>Keep your GST invoices from the bank or payment provider</strong> to claim input tax credit.</li>
+      <li><strong>Don't add a surcharge</strong> to customers who pay by UPI.</li>
+      <li><strong>Confirm your exact rate</strong> with your bank or payment provider, especially if you're in an essential sector.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      {faqs.map((f) => (
+        <details><summary>{f.q}</summary><p>{f.a}</p></details>
+      ))}
+    </div>
+
+    <p><a class="cta" href="/">Open the UPI MDR calculator →</a></p>
+    <p lang="hi">हिंदी में पढ़ें: <a href="/hi/">UPI MDR कैलकुलेटर और नियम</a></p>
+
+    <h2>Sources</h2>
+    <p class="updated">This guide summarises publicly reported details of the NPCI MDR framework announced on 15 September 2026, including coverage by PayU, SCC Online, Business Today and Kotak Neo. It is not legal or tax advice.</p>
+  </article>
+</Base>

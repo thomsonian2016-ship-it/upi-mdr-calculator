@@ -1,0 +1,48 @@
+---
+import Base from "../layouts/Base.astro";
+import { SITE, LAST_UPDATED, breadcrumbSchema } from "../lib/mdr";
+
+const path = "/about/";
+const schemas = [
+  {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    name: "About UPI MDR Calculator",
+    url: SITE + path,
+    inLanguage: "en-IN",
+  },
+  breadcrumbSchema([
+    { name: "UPI MDR Calculator", url: SITE + "/" },
+    { name: "About", url: SITE + path },
+  ]),
+];
+---
+
+<Base title="About UPI MDR Calculator" description="Why this free UPI MDR calculator exists, how the numbers are calculated, and how we keep it accurate." path={path} schemas={schemas}>
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Calculator</a> › About</nav>
+  <article class="prose">
+    <h1>About UPI MDR Calculator</h1>
+    <p>
+      UPI MDR Calculator is a free, independent tool for Indian shopkeepers, business owners and accountants. When the new UPI MDR rules were announced for 15 October 2026, most explanations were long articles. We built a simple calculator that answers one question instantly: <em>on this payment, how much will I actually receive?</em>
+    </p>
+
+    <h2>How the numbers are calculated</h2>
+    <ul>
+      <li>MDR is 0.4% of payments above ₹2,000, capped at ₹300 per payment.</li>
+      <li>Payments of ₹2,000 or less, and small merchants under ₹1 lakh a month via UPI QR, have zero MDR.</li>
+      <li>Essential sectors pay a flat ₹5 on payments above ₹2,000.</li>
+      <li>18% GST is applied to the MDR amount.</li>
+    </ul>
+    <p>These rules follow the NPCI framework announced on 15 September 2026, as reported publicly. The full explanation is in our <a href="/upi-mdr-rules-2026/">UPI MDR rules guide</a>.</p>
+
+    <h2>Keeping it accurate</h2>
+    <p>
+      We update the calculator and guides when rates, exemptions or GST treatment change. Every page shows the date it was last updated (currently {LAST_UPDATED}). Your bank or payment provider's statement is always the final word on what you were charged.
+    </p>
+
+    <h2>Independence</h2>
+    <p>
+      This site is not affiliated with NPCI, the RBI, any bank or any payment app. It is for information only and is not financial or tax advice.
+    </p>
+  </article>
+</Base>

@@ -1,0 +1,93 @@
+---
+import Base from "../layouts/Base.astro";
+import { SITE, LAST_UPDATED, LAST_UPDATED_ISO, calc, inr, inr0, faqSchema, breadcrumbSchema, type Faq } from "../lib/mdr";
+
+const title = "UPI MDR Chart 2026: Charges on ₹2,000 to ₹1 Lakh Payments";
+const description = "UPI MDR ready-reckoner from 15 Oct 2026: MDR, 18% GST and net settlement for every common payment from ₹2,000 to ₹1 lakh, under the new NPCI rules.";
+const path = "/upi-mdr-chart/";
+
+const amounts: number[] = [2000];
+for (let a = 2500; a <= 10000; a += 500) amounts.push(a);
+for (let a = 11000; a <= 20000; a += 1000) amounts.push(a);
+for (let a = 25000; a <= 100000; a += 5000) amounts.push(a);
+const rows = amounts.map(calc);
+
+const faqs: Faq[] = [
+  { q: "How much MDR is charged on a ₹5,000 UPI payment?", a: "₹20 MDR plus ₹3.60 GST, a total of ₹23.60. The merchant receives ₹4,976.40." },
+  { q: "How much MDR is charged on a ₹10,000 UPI payment?", a: "₹40 MDR plus ₹7.20 GST, a total of ₹47.20. The merchant receives ₹9,952.80." },
+  { q: "How much MDR is charged on a ₹50,000 UPI payment?", a: "₹200 MDR plus ₹36 GST, a total of ₹236. The merchant receives ₹49,764." },
+  { q: "How much MDR is charged on a ₹1 lakh UPI payment?", a: "MDR is capped at ₹300, plus ₹54 GST, a total of ₹354. The merchant receives ₹99,646." },
+];
+
+const schemas = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description,
+    inLanguage: "en-IN",
+    datePublished: LAST_UPDATED_ISO,
+    dateModified: LAST_UPDATED_ISO,
+    mainEntityOfPage: SITE + path,
+    image: SITE + "/og-image.png",
+    author: { "@type": "Organization", name: "UPI MDR Calculator", url: SITE + "/" },
+    publisher: { "@type": "Organization", name: "UPI MDR Calculator", url: SITE + "/" },
+  },
+  faqSchema(faqs),
+  breadcrumbSchema([
+    { name: "UPI MDR Calculator", url: SITE + "/" },
+    { name: "UPI MDR Chart", url: SITE + path },
+  ]),
+];
+---
+
+<Base title={title} description={description} path={path} schemas={schemas} ogType="article">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Calculator</a> › UPI MDR Chart</nav>
+  <h1>UPI MDR Chart: Charges from ₹2,000 to ₹1 Lakh</h1>
+  <p class="lead">MDR, GST and net settlement for a standard merchant under the rules from <strong>15 October 2026</strong>. Click any amount to open it in the calculator.</p>
+  <p class="updated">Last updated {LAST_UPDATED}</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Payment</th><th>MDR (0.4%)</th><th>GST (18%)</th><th>Total deduction</th><th>Merchant receives</th></tr>
+      </thead>
+      <tbody>
+        {rows.map((r) => (
+          <tr>
+            <td><a href={`/?amount=${r.amount}`} rel="nofollow">{inr0(r.amount)}</a></td>
+            <td>{inr(r.mdr)}</td>
+            <td>{inr(r.gst)}</td>
+            <td>{inr(r.total)}</td>
+            <td>{inr(r.net)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <article class="prose">
+    <h2>How to read this chart</h2>
+    <ul>
+      <li><strong>₹2,000 or less</strong> has zero MDR, so a ₹2,000 payment is settled in full.</li>
+      <li>Above ₹2,000, MDR is <strong>0.4%</strong> of the payment, and 18% GST is added on top of the MDR.</li>
+      <li>MDR stops rising at <strong>₹300</strong>, reached at ₹75,000. Every payment above that has the same ₹354 total deduction.</li>
+      <li>The customer always pays the same amount; the deduction comes out of the merchant's settlement.</li>
+    </ul>
+
+    <h2>When this chart does not apply</h2>
+    <ul>
+      <li><strong>Small merchants</strong> whose UPI QR receipts are under ₹1 lakh a month pay zero MDR.</li>
+      <li><strong>Essential sectors</strong> (railways, telecom, insurance, fuel, agricultural inputs) pay a flat ₹5 instead of 0.4%.</li>
+      <li><strong>Person-to-person</strong> transfers never attract MDR.</li>
+    </ul>
+    <p>For these cases, or any other amount, use the <a href="/">UPI MDR calculator</a>. The full rules are explained in the <a href="/upi-mdr-rules-2026/">UPI MDR rules 2026 guide</a>.</p>
+
+    <h2>Quick answers</h2>
+    <div class="faq">
+      {faqs.map((f) => (
+        <details><summary>{f.q}</summary><p>{f.a}</p></details>
+      ))}
+    </div>
+  </article>
+</Base>

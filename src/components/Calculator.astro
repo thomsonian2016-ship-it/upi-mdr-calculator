@@ -1,0 +1,212 @@
+---
+// Reusable calculator; all visible text comes from `t` so it works in English and Hindi
+interface Props { lang?: "en" | "hi" }
+const { lang = "en" } = Astro.props;
+
+const T = {
+  en: {
+    aria: "UPI MDR calculator",
+    amount: "UPI payment amount (₹)",
+    type: "Merchant type",
+    standard: "Standard merchant (0.4%, max ₹300)",
+    essential: "Essential sector – railways, telecom, insurance, fuel, agri inputs (flat ₹5)",
+    custom: "Custom MDR rate",
+    customRate: "Custom MDR rate (%)",
+    customHint: "Use this if your bank or payment provider quotes a different rate.",
+    small: "My UPI QR receipts are under ₹1 lakh a month",
+    smallNote: "(small merchants are exempt)",
+    gst: "Include 18% GST on MDR",
+    paid: "Customer pays",
+    mdr: "MDR",
+    gstRow: "GST on MDR (18%)",
+    total: "Total deduction",
+    net: "Merchant receives",
+    rUnder: "No MDR: payments of ₹2,000 or less are exempt.",
+    rSmall: "No MDR: small merchants with UPI QR receipts under ₹1 lakh a month are exempt.",
+    rEssential: "Flat ₹5 MDR applies for essential sectors on payments above ₹2,000.",
+    rCustom: "Custom rate of {rate}% applied (no cap).",
+    rCap: "MDR is capped at ₹300 (reached at ₹75,000).",
+    rStd: "0.4% MDR applies because the payment is above ₹2,000.",
+    eff: "Effective cost: {eff}%.",
+  },
+  hi: {
+    aria: "UPI MDR कैलकुलेटर",
+    amount: "UPI पेमेंट राशि (₹)",
+    type: "मर्चेंट का प्रकार",
+    standard: "सामान्य मर्चेंट (0.4%, अधिकतम ₹300)",
+    essential: "आवश्यक सेक्टर – रेलवे, टेलीकॉम, बीमा, ईंधन, कृषि इनपुट (फ्लैट ₹5)",
+    custom: "अपनी MDR दर डालें",
+    customRate: "अपनी MDR दर (%)",
+    customHint: "अगर आपका बैंक या पेमेंट प्रोवाइडर अलग दर बताता है तो इसका इस्तेमाल करें।",
+    small: "मेरी UPI QR से महीने की कमाई ₹1 लाख से कम है",
+    smallNote: "(छोटे मर्चेंट को छूट है)",
+    gst: "MDR पर 18% GST जोड़ें",
+    paid: "ग्राहक ने दिया",
+    mdr: "MDR",
+    gstRow: "MDR पर GST (18%)",
+    total: "कुल कटौती",
+    net: "मर्चेंट को मिलेगा",
+    rUnder: "कोई MDR नहीं: ₹2,000 या उससे कम के पेमेंट पर छूट है।",
+    rSmall: "कोई MDR नहीं: महीने में ₹1 लाख से कम UPI QR पेमेंट पाने वाले छोटे मर्चेंट को छूट है।",
+    rEssential: "₹2,000 से ऊपर के पेमेंट पर आवश्यक सेक्टर के लिए फ्लैट ₹5 MDR लगेगा।",
+    rCustom: "{rate}% की आपकी दर लगाई गई (कोई सीमा नहीं)।",
+    rCap: "MDR की अधिकतम सीमा ₹300 है (₹75,000 पर पहुँचती है)।",
+    rStd: "पेमेंट ₹2,000 से ज़्यादा है, इसलिए 0.4% MDR लगेगा।",
+    eff: "असल लागत: {eff}%।",
+  },
+}[lang];
+---
+
+<section class="calc-card" aria-label={T.aria} data-mdr-calc data-i18n={JSON.stringify(T)}>
+  <div class="input-group">
+    <label for="amount">{T.amount}</label>
+    <input type="number" id="amount" value="5000" step="any" min="0" inputmode="decimal" />
+  </div>
+
+  <div class="input-group">
+    <label for="category">{T.type}</label>
+    <select id="category">
+      <option value="standard" selected>{T.standard}</option>
+      <option value="essential">{T.essential}</option>
+      <option value="custom">{T.custom}</option>
+    </select>
+  </div>
+
+  <div class="input-group" id="customRateGroup" hidden>
+    <label for="customRate">{T.customRate}</label>
+    <input type="number" id="customRate" value="0.4" step="0.01" min="0" inputmode="decimal" />
+    <small class="hint">{T.customHint}</small>
+  </div>
+
+  <label class="check">
+    <input type="checkbox" id="smallMerchant" />
+    <span>{T.small} <em>{T.smallNote}</em></span>
+  </label>
+
+  <label class="check">
+    <input type="checkbox" id="includeGst" checked />
+    <span>{T.gst}</span>
+  </label>
+
+  <hr class="divider" />
+
+  <div class="results" aria-live="polite">
+    <div class="result-row"><span>{T.paid}</span><span id="paid">₹5,000.00</span></div>
+    <div class="result-row"><span>{T.mdr}</span><span id="mdrFee">– ₹20.00</span></div>
+    <div class="result-row" id="gstRow"><span>{T.gstRow}</span><span id="gstFee">– ₹3.60</span></div>
+    <div class="result-row highlight-fee"><span>{T.total}</span><strong id="totalFee">₹23.60</strong></div>
+    <div class="result-row highlight-net"><span>{T.net}</span><strong id="netAmount">₹4,976.40</strong></div>
+    <p class="note" id="note">{T.rStd}</p>
+  </div>
+</section>
+
+<script>
+  import { MDR_RATE, MDR_CAP, THRESHOLD, GST_RATE, ESSENTIAL_FLAT } from "../lib/mdr";
+
+  const root = document.querySelector<HTMLElement>("[data-mdr-calc]");
+  if (root) {
+    const t = JSON.parse(root.dataset.i18n || "{}");
+    const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+    const amountInput = $<HTMLInputElement>("amount");
+    const categorySelect = $<HTMLSelectElement>("category");
+    const customRateGroup = $<HTMLDivElement>("customRateGroup");
+    const customRateInput = $<HTMLInputElement>("customRate");
+    const smallMerchantBox = $<HTMLInputElement>("smallMerchant");
+    const includeGstBox = $<HTMLInputElement>("includeGst");
+
+    const formatINR = (v: number) =>
+      "₹" + v.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const num = (el: HTMLInputElement) => {
+      const v = parseFloat(el.value);
+      return isFinite(v) ? Math.max(0, v) : 0;
+    };
+
+    // Allow deep links like /?amount=10000 (used by the MDR chart page)
+    try {
+      const q = new URLSearchParams(location.search).get("amount");
+      if (q && isFinite(parseFloat(q))) amountInput.value = String(parseFloat(q));
+    } catch {}
+
+    const calculate = () => {
+      const amount = num(amountInput);
+      const category = categorySelect.value;
+      customRateGroup.hidden = category !== "custom";
+
+      let mdr = 0;
+      let reason = "";
+      if (amount <= THRESHOLD) {
+        reason = t.rUnder;
+      } else if (smallMerchantBox.checked) {
+        reason = t.rSmall;
+      } else if (category === "essential") {
+        mdr = Math.min(ESSENTIAL_FLAT, amount);
+        reason = t.rEssential;
+      } else if (category === "custom") {
+        const rate = num(customRateInput) / 100;
+        mdr = Math.min(amount * rate, amount);
+        reason = t.rCustom.replace("{rate}", (rate * 100).toFixed(2));
+      } else {
+        const raw = amount * MDR_RATE;
+        mdr = Math.min(raw, MDR_CAP);
+        reason = raw > MDR_CAP ? t.rCap : t.rStd;
+      }
+
+      const gst = includeGstBox.checked ? mdr * GST_RATE : 0;
+      const total = mdr + gst;
+      const effective = amount > 0 ? (total / amount) * 100 : 0;
+
+      $("paid").textContent = formatINR(amount);
+      $("mdrFee").textContent = (mdr > 0 ? "– " : "") + formatINR(mdr);
+      $("gstFee").textContent = (gst > 0 ? "– " : "") + formatINR(gst);
+      $("gstRow").hidden = !includeGstBox.checked;
+      $("totalFee").textContent = formatINR(total);
+      $("netAmount").textContent = formatINR(amount - total);
+      $("note").textContent = total > 0 ? `${reason} ${t.eff.replace("{eff}", effective.toFixed(2))}` : reason;
+    };
+
+    try {
+      const saved = localStorage.getItem("mdrCategory");
+      if (saved && [...categorySelect.options].some((o) => o.value === saved)) categorySelect.value = saved;
+    } catch {}
+
+    categorySelect.addEventListener("change", () => {
+      try { localStorage.setItem("mdrCategory", categorySelect.value); } catch {}
+      calculate();
+    });
+    [amountInput, customRateInput].forEach((el) => el.addEventListener("input", calculate));
+    [smallMerchantBox, includeGstBox].forEach((el) => el.addEventListener("change", calculate));
+    calculate();
+  }
+</script>
+
+<style>
+  .calc-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  }
+  .input-group { margin-bottom: 16px; }
+  label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; }
+  input[type="number"], select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 1rem;
+    background: var(--card);
+    color: var(--text);
+  }
+  .hint { display: block; color: var(--muted); font-size: 0.8rem; margin-top: 6px; }
+  .check { display: flex; gap: 10px; align-items: flex-start; font-weight: 500; margin-bottom: 10px; cursor: pointer; }
+  .check input { width: 18px; height: 18px; margin: 3px 0 0; flex-shrink: 0; accent-color: var(--primary); }
+  .check em { color: var(--muted); font-style: normal; font-weight: 400; }
+  .divider { border: 0; border-top: 1px solid var(--border); margin: 20px 0; }
+  .results { display: flex; flex-direction: column; gap: 12px; }
+  .result-row { display: flex; justify-content: space-between; gap: 12px; font-size: 0.95rem; }
+  .result-row[hidden] { display: none; }
+  .highlight-fee { color: var(--red); }
+  .highlight-net { color: var(--green); font-size: 1.15rem; border-top: 1px dashed var(--border); padding-top: 12px; }
+  .note { margin: 4px 0 0; font-size: 0.85rem; color: var(--muted); }
+</style>

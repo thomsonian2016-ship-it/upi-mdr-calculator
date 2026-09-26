@@ -1,0 +1,206 @@
+---
+import { SITE } from "../lib/mdr";
+
+interface Props {
+  title: string;
+  description: string;
+  path: string; // e.g. "/" or "/hi/"
+  lang?: "en" | "hi";
+  alternates?: { en: string; hi: string }; // paths of language versions
+  schemas?: object[];
+  ogType?: "website" | "article";
+}
+
+const { title, description, path, lang = "en", alternates, schemas = [], ogType = "website" } = Astro.props;
+const url = SITE + path;
+const ogImage = SITE + "/og-image.png";
+const hi = lang === "hi";
+
+const nav = hi
+  ? [
+      { href: "/hi/", label: "कैलकुलेटर" },
+      { href: "/upi-mdr-chart/", label: "MDR चार्ट" },
+      { href: "/upi-mdr-rules-2026/", label: "नियम" },
+      { href: "/", label: "English" },
+    ]
+  : [
+      { href: "/", label: "Calculator" },
+      { href: "/upi-mdr-chart/", label: "MDR Chart" },
+      { href: "/upi-mdr-rules-2026/", label: "Rules" },
+      { href: "/hi/", label: "हिंदी" },
+    ];
+---
+
+<!doctype html>
+<html lang={hi ? "hi-IN" : "en-IN"}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={url} />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="theme-color" content="#0f172a" />
+
+    {alternates && (
+      <>
+        <link rel="alternate" hreflang="en-IN" href={SITE + alternates.en} />
+        <link rel="alternate" hreflang="hi-IN" href={SITE + alternates.hi} />
+        <link rel="alternate" hreflang="x-default" href={SITE + alternates.en} />
+      </>
+    )}
+
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content="UPI MDR Calculator" />
+    <meta property="og:url" content={url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content={hi ? "hi_IN" : "en_IN"} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="UPI MDR Calculator: ₹5,000 payment, MDR ₹20, GST ₹3.60, merchant gets ₹4,976.40" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    {schemas.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+
+    <script is:inline defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "92039e47441d48f689cc60fd3525436f"}'></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">{hi ? "मुख्य सामग्री पर जाएं" : "Skip to content"}</a>
+    <header class="site-header">
+      <a class="brand" href={hi ? "/hi/" : "/"}>UPI MDR Calculator</a>
+      <nav aria-label={hi ? "मुख्य मेनू" : "Main"}>
+        {nav.map((n) => (
+          <a href={n.href} aria-current={n.href === path ? "page" : undefined} lang={n.label === "English" ? "en" : n.label === "हिंदी" ? "hi" : undefined}>{n.label}</a>
+        ))}
+      </nav>
+    </header>
+
+    <main id="main" class="container">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <nav aria-label="Footer">
+        <a href="/">UPI MDR Calculator</a>
+        <a href="/hi/" lang="hi">हिंदी कैलकुलेटर</a>
+        <a href="/upi-mdr-chart/">UPI MDR Chart</a>
+        <a href="/upi-mdr-rules-2026/">UPI MDR Rules 2026</a>
+        <a href="/about/">About</a>
+        <a href="/privacy/">Privacy</a>
+      </nav>
+      <p>
+        {hi
+          ? "यह कैलकुलेटर केवल जानकारी के लिए है, यह वित्तीय या कर सलाह नहीं है। वास्तविक शुल्क आपके बैंक, पेमेंट प्रोवाइडर और मर्चेंट कैटेगरी पर निर्भर करते हैं।"
+          : "This site is for information only and is not financial or tax advice. Actual charges depend on your bank, payment provider and merchant category."}
+      </p>
+      <p>© 2026 upimdrcalculator.com</p>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --primary: #2563eb;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --muted: #64748b;
+    --body: #334155;
+    --border: #e2e8f0;
+    --green: #15803d;
+    --red: #b91c1c;
+    --link: #1d4ed8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0b1220;
+      --card: #111a2e;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --body: #cbd5e1;
+      --border: #1f2a44;
+      --green: #4ade80;
+      --red: #f87171;
+      --link: #93c5fd;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", "Noto Sans Devanagari", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    line-height: 1.6;
+  }
+  a { color: var(--link); }
+  .skip { position: absolute; left: -9999px; }
+  .skip:focus { left: 16px; top: 8px; background: var(--card); padding: 8px 12px; z-index: 10; }
+  .site-header {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 14px 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .brand { font-weight: 800; color: var(--text); text-decoration: none; }
+  .site-header nav { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 0.92rem; }
+  .site-header nav a { color: var(--muted); text-decoration: none; }
+  .site-header nav a[aria-current="page"] { color: var(--text); font-weight: 600; }
+  .container { max-width: 640px; margin: 0 auto; padding: 8px 16px 24px; }
+  .site-footer {
+    max-width: 640px;
+    margin: 24px auto 0;
+    padding: 20px 16px 40px;
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-align: center;
+  }
+  .site-footer nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 14px; margin-bottom: 10px; }
+  .site-footer a { color: var(--muted); }
+  h1 { font-size: 1.8rem; line-height: 1.25; margin: 12px 0 8px; }
+  h2 { font-size: 1.25rem; margin-top: 28px; }
+  h3 { font-size: 1.05rem; margin-top: 20px; }
+  .lead { color: var(--muted); font-size: 0.97rem; }
+  .prose { color: var(--body); }
+  .prose h2, .prose h3 { color: var(--text); }
+  .updated { font-size: 0.8rem; color: var(--muted); }
+  .breadcrumb { font-size: 0.82rem; color: var(--muted); margin-top: 4px; }
+  .breadcrumb a { color: var(--muted); }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.9rem; background: var(--card); }
+  th, td { padding: 8px 10px; border: 1px solid var(--border); text-align: right; white-space: nowrap; }
+  th:first-child, td:first-child { text-align: left; }
+  .faq details {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+  }
+  .faq summary { font-weight: 600; cursor: pointer; color: var(--text); }
+  .faq p { margin: 10px 0 0; font-size: 0.93rem; }
+  .cta {
+    display: inline-block;
+    margin-top: 8px;
+    background: var(--primary);
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+  }
+</style>
